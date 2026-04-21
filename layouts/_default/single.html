@@ -18,11 +18,11 @@
 
           <div class="manuscript-meta-block author-verification-block">
             <span class="sidebar-label">Author</span>
-            <a href="{{ site.Params.author_url }}" class="author-verification-link" target="_blank" rel="noopener">
-              <img src='{{ "images/170335550-48p.jpg" | relURL }}' alt="{{ site.Params.author }}" class="author-avatar" width="24" height="24" loading="lazy">
+            <a href="{{ site.Params.author_url | default "#" }}" class="author-verification-link" target="_blank" rel="noopener">
+              <img src='{{ site.Params.author_avatar | default "images/default-avatar.png" | relURL }}' alt="{{ site.Params.author }}" class="author-avatar" width="24" height="24" loading="lazy">
               <div class="author-details">
                 <span class="author-name">{{ site.Params.author }}</span>
-                <span class="author-role">Systems Engineer</span>
+                <span class="author-role">{{ site.Params.author_role | default "Author" }}</span>
               </div>
             </a>
           </div>
