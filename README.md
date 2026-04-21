@@ -29,6 +29,13 @@ To make changes to the theme and see them instantly on your website without comm
   replacements = "github.com/lorbic/hugo-theme-elarien -> ../hugo-theme-elarien"
 ```
 
+## Examples in the Wild
+
+This theme powers several independent websites, each utilizing the override system to maintain a unique visual identity:
+
+*   **[Lorbic Web Studio](https://lorbic.com)** - The primary implementation, featuring a tech-focused, dark/light toggle aesthetic.
+*   **[Anjali Patel](https://anjalipatel.org)** - A biotechnology research blog utilizing a custom green color palette and scientific styling overrides.
+
 ## Customization
 
 Elarien is built to be overridden. All SCSS variables in the theme use the `!default` flag.
