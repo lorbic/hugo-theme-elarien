@@ -1,14 +1,14 @@
 {{ if ne .Params.showNewsletter false }}
 <div class="newsletter-block reveal-item">
     <div class="newsletter-header">
-        <span class="newsletter-label">Dispatch // Subscription</span>
-        <h3 class="newsletter-headline">The Internet is Breaking.</h3>
-        <p class="newsletter-subline">Let's figure out why. Get in-depth technical deep dives and architectural insights delivered straight to your inbox.</p>
+        <span class="newsletter-label">{{ site.Params.newsletter.label | default "Dispatch // Subscription" }}</span>
+        <h3 class="newsletter-headline">{{ site.Params.newsletter.headline | default "The Internet is Breaking." }}</h3>
+        <p class="newsletter-subline">{{ site.Params.newsletter.subline | default "Let's figure out why. Get in-depth technical deep dives and architectural insights delivered straight to your inbox." }}</p>
     </div>
 
     <form method="post" action="https://mailer.heartfire.lorbic.com/subscription/form" class="newsletter-form listmonk-form">
         <input type="hidden" name="nonce" />
-        <input type="hidden" name="l" value="d3a1342b-0205-4153-9cfe-52ef3b1ef880" />
+        <input type="hidden" name="l" value="{{ site.Params.newsletter.list_id | default "d3a1342b-0205-4153-9cfe-52ef3b1ef880" }}" />
 
         <div class="newsletter-inputs">
             <div class="input-group">
@@ -17,7 +17,7 @@
             <div class="input-group">
                 <input type="text" name="name" placeholder="Name (optional)" class="newsletter-input" />
             </div>
-            <button type="submit" class="newsletter-submit">Join the Dispatch</button>
+            <button type="submit" class="newsletter-submit">{{ site.Params.newsletter.button_text | default "Join the Dispatch" }}</button>
         </div>
 
         <div class="newsletter-captcha">
