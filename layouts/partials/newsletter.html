@@ -21,7 +21,7 @@
         </div>
 
         <div class="newsletter-captcha">
-            <altcha-widget challengeurl="{{ with site.Params.newsletter.server }}{{ . }}/api/public/captcha/altcha{{ else }}#{{ end }}"></altcha-widget>
+            <altcha-widget challengeurl="{{ with site.Params.newsletter.server }}{{ . }}/public/captcha/altcha{{ else }}#{{ end }}"></altcha-widget>
         </div>
 
         <div class="newsletter-footer">
