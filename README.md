@@ -47,3 +47,20 @@ To change a color or font, simply create an `assets/sass/_overrides.scss` (or si
 $brand-primary: #e83e8c; 
 $background-color: #111111;
 ```
+
+## Newsletter Setup
+
+Elarien includes built-in support for newsletters using **[Listmonk](https://listmonk.app/)**, a self-hosted newsletter and mailing list manager. It features integrated Altcha spam protection.
+
+To configure your own Listmonk instance, add the following to your `config.toml`:
+
+```toml
+[params.newsletter]
+server = "https://your-listmonk-instance.com"
+list_id = "your-list-uuid"
+label = "Journal // Subscription"
+headline = "The Internet is Breaking."
+subline = "Get in-depth technical deep dives and architectural insights delivered straight to your inbox."
+button_text = "Join the Dispatch"
+```
+If you omit the `server` and `list_id` variables, it defaults to the Lorbic mailer instance.
