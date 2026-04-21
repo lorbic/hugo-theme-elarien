@@ -1,0 +1,38 @@
+{{ define "main" }}
+<div class="container">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="til-log-header">
+        <span class="log-label">Technical Journal // {{ .Title }}</span>
+        <div class="log-line"></div>
+      </div>
+
+      <!-- Article List -->
+      <div class="post-list-modern reveal-stagger">
+        {{ $paginator := .Paginate .Pages }}
+        {{ range $paginator.Pages }}
+          {{ .Render "summary" }}
+        {{ end }}
+      </div>
+
+      {{ if or $paginator.HasPrev $paginator.HasNext }}
+      <ul class="pager">
+          {{ if $paginator.HasPrev }}
+          <li class="previous">
+              <a href="{{ .Paginator.Prev.URL }}">&larr; Newer</a>
+          </li>
+          {{ end }}
+          {{ if $paginator.HasNext }}
+          <li class="next">
+              <a href="{{ .Paginator.Next.URL }}">Older &rarr;</a>
+          </li>
+          {{ end }}
+      </ul>
+      {{ end }}
+
+      {{ partial "random-post-link.html" . }}
+    </div>
+  </div>
+</div>
+
+{{ end }}

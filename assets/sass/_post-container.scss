@@ -1,0 +1,121 @@
+// Unified Post Container
+.post-container {
+  font-family: $font-family-sans-serif;
+  font-size: $font-size-base;
+  line-height: $base-line-height;
+  color: var(--text-color);
+  width: 100%;
+
+  @media (max-width: $breakpoint-md) {
+    font-size: $font-size-base-mobile;
+  }
+
+  // Explicit Drop Cap (Opt-in via HTML/Markdown class)
+  // Usage: <span class="dropcap">T</span>he rest of the text...
+  .dropcap {
+    float: left;
+    font-family: $font-family-serif;
+    font-size: 3.5rem;
+    line-height: 0.8;
+    padding-top: 4px;
+    padding-right: 8px;
+    padding-left: 0;
+    margin-bottom: -4px; // Adjust for vertical rhythm
+    font-weight: 900;
+    color: var(--brand-primary);
+
+    @media (max-width: $breakpoint-md) {
+      font-size: 2.8rem;
+    }
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    position: relative;
+    font-family: $font-family-serif;
+    font-weight: 800;
+    // margin-top: $space-huge;
+    margin-bottom: $space-lg;
+    letter-spacing: -0.02em;
+    color: var(--text-color);
+    word-break: break-word;
+    scroll-margin-top: 100px; // Ensure space below sticky navbar
+
+    @media (max-width: $breakpoint-md) {
+      margin-top: $space-xl;
+    }
+
+    .anchorjs-link {
+      position: absolute;
+      left: -30px;
+      padding-right: 10px;
+      opacity: 0;
+      text-decoration: none !important;
+      color: var(--brand-primary);
+      transition: all 0.2s ease;
+      font-family: $font-family-sans-serif;
+      font-weight: 400;
+      font-size: 0.8em;
+
+      &::after {
+        content: '#';
+      }
+
+      &:hover {
+        opacity: 1 !important;
+      }
+    }
+
+    &:hover .anchorjs-link {
+      opacity: 0.4;
+    }
+  }
+
+  h2 { 
+    font-size: $font-size-xxl; 
+    padding-top: $space-xl; 
+
+    @media (max-width: $breakpoint-md) {
+      font-size: $font-size-xl;
+    }
+  }
+  
+  h3 { 
+    font-size: $font-size-xl; 
+
+    @media (max-width: $breakpoint-md) {
+      font-size: $font-size-lg;
+    }
+  }
+
+  p { margin-bottom: $space-lg; }
+
+  blockquote {
+    margin: $space-huge 0;
+    padding: $space-xl;
+    background-color: var(--body-background-color);
+    border-left: 4px solid var(--brand-primary);
+    font-family: $font-family-serif;
+    font-style: italic;
+    color: var(--text-color);
+
+    @media (max-width: $breakpoint-md) {
+      font-size: 1.15rem;
+    }
+
+    p:last-child { margin-bottom: 0; }
+  }
+
+  code:not(pre code) {
+    background: var(--code-bg-color);
+    color: var(--code-text-color);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: $font-family-monospace;
+    font-size: 0.95em;
+  }
+
+  pre {
+    border-radius: 0;
+    border: 1px solid var(--border-color);
+  }
+}

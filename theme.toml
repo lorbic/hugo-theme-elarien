@@ -1,0 +1,16 @@
+name = "Elarien"
+license = "MIT"
+description = "A highly customizable, independent Hugo module theme by Lorbic."
+homepage = "https://studio.lorbic.com"
+
+tags = ["Blog", "Responsive", "Minimalist", "Lorbic"]
+features = ["responsive", "search", "dark-mode", "hugo-modules"]
+min_version = "0.110.0"
+
+[author]
+  name = "Vikash Patel"
+  homepage = "https://vikashpatel.net"
+
+[original]
+  name = "huxblog"
+  homepage = "https://github.com/Huxpro/huxpro.github.io"

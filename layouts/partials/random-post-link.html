@@ -1,0 +1,27 @@
+<div class="hidden-gem-container">
+  <div class="gem-line"></div>
+  <a href="#" id="feeling-lucky" class="gem-link">
+    {{ partial "icon" "dice" }}
+    <span>Discover a Random Gem</span>
+  </a>
+  <div class="gem-line"></div>
+</div>
+
+
+{{ $posts := where .Site.RegularPages "Section" "in" (site.Params.mainSections | default (slice "post" "posts")) }}
+{{ if gt (len $posts) 0 }}
+<script>
+  var luckyLink = document.getElementById('feeling-lucky');
+  if (luckyLink && !luckyLink.dataset.listener) {
+    luckyLink.addEventListener('click', function(event) {
+      event.preventDefault();
+      const posts = [{{ range $index, $post := $posts }}{{ if $index }}, {{ end }}"{{ .Permalink }}"{{ end }}];
+      if (posts.length > 0) {
+        const randomPost = posts[Math.floor(Math.random() * posts.length)];
+        window.location.href = randomPost;
+      }
+    });
+    luckyLink.dataset.listener = "true";
+  }
+</script>
+{{ end }}

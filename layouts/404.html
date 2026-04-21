@@ -1,0 +1,110 @@
+{{ define "main" }}
+<div class="terminal-404-wrapper" style="min-height: 80vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem;">
+    <div class="terminal-404-container" style="width: 100%; max-width: 800px; background: #000; border: 1px solid var(--border-color); border-radius: 4px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+        <div class="terminal-header" style="background: rgba(255,255,255,0.1); padding: 8px 16px; display: flex; align-items: center; justify-content: space-between;">
+            <div style="display: flex; gap: 8px;">
+                <span style="width: 12px; height: 12px; border-radius: 50%; background: #ff5f56;"></span>
+                <span style="width: 12px; height: 12px; border-radius: 50%; background: #ffbd2e;"></span>
+                <span style="width: 12px; height: 12px; border-radius: 50%; background: #27c93f;"></span>
+            </div>
+            <span style="font-family: monospace; color: rgba(255,255,255,0.5); font-size: 12px;">root@lorbic.com:~</span>
+        </div>
+        <div class="terminal-body" id="term-body" style="padding: 24px; font-family: monospace; color: #0f0; font-size: 14px; line-height: 1.6; min-height: 300px;">
+            <!-- Text injected via JS -->
+        </div>
+    </div>
+    
+    <style>
+        .term-action-btn:hover {
+            border-color: var(--brand-primary) !important;
+            color: var(--brand-primary) !important;
+            background-color: var(--body-background-color) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+    </style>
+    <div id="term-actions" style="display: flex; gap: 20px; margin-top: 2rem; opacity: 0; transition: opacity 0.5s ease;">
+        <a href="/" class="btn term-action-btn" style="background: transparent; border: 1px solid var(--border-color); color: var(--text-color); padding: 10px 20px; font-family: monospace; text-transform: uppercase; text-decoration: none; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px;">
+            {{ partial "icon" "home" }} Return Home
+        </a>
+        <button id="not-found-search" class="btn term-action-btn" style="background: transparent; border: 1px solid var(--border-color); color: var(--text-color); padding: 10px 20px; font-family: monospace; text-transform: uppercase; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px;">
+            {{ partial "icon" "search" }} Search Logs
+        </button>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const termBody = document.getElementById('term-body');
+    const termActions = document.getElementById('term-actions');
+    const path = window.location.pathname;
+    
+    const lines = [
+        "Initializing system startup...",
+        "[ OK ] Mounted local file systems.",
+        "[ OK ] Started network manager.",
+        "[ OK ] Established database connection.",
+        "[ OK ] Loaded routing table.",
+        `[FAIL] Attempting to locate inode for ${path}`,
+        "Error: Segment fault. Pointer referenced unallocated memory block.",
+        "Kernel panic - not syncing: VFS: Unable to mount root fs on unknown-block(0,0)",
+        "System halted. 404_PAGE_NOT_FOUND."
+    ];
+
+    let lineIndex = 0;
+    
+    function typeLine() {
+        if (lineIndex < lines.length) {
+            const p = document.createElement('p');
+            p.style.margin = "0 0 8px 0";
+            
+            const lineText = lines[lineIndex];
+            
+            // Color formatting
+            if (lineText.includes("[ OK ]")) {
+                p.innerHTML = lineText.replace("[ OK ]", "<span style='color: #0f0'>[ OK ]</span>");
+            } else if (lineText.includes("[FAIL]")) {
+                p.innerHTML = lineText.replace("[FAIL]", "<span style='color: #ff5f56'>[FAIL]</span>");
+            } else if (lineText.includes("Kernel panic") || lineText.includes("Error")) {
+                p.style.color = "#ff5f56";
+                p.innerText = lineText;
+            } else {
+                p.innerText = lineText;
+                p.style.color = "#ccc";
+            }
+            
+            termBody.appendChild(p);
+            lineIndex++;
+            
+            // Speed up the first few lines, slow down for the error
+            const delay = lineIndex < 5 ? 150 : (lineIndex === 6 ? 600 : 300);
+            setTimeout(typeLine, delay);
+        } else {
+            // Show cursor and actions when done
+            const cursorP = document.createElement('p');
+            cursorP.innerHTML = "<span style='color:#ccc'>root@lorbic:/$</span> <span class='blink'>_</span>";
+            cursorP.style.margin = "16px 0 0 0";
+            
+            // Add blinking animation style dynamically
+            const style = document.createElement('style');
+            style.innerHTML = "@keyframes blinker { 50% { opacity: 0; } } .blink { animation: blinker 1s linear infinite; font-weight: bold; }";
+            document.head.appendChild(style);
+            
+            termBody.appendChild(cursorP);
+            
+            // Fade in buttons
+            setTimeout(() => {
+                termActions.style.opacity = "1";
+            }, 500);
+        }
+    }
+    
+    // Start typing after a short delay
+    setTimeout(typeLine, 300);
+    
+    document.getElementById('not-found-search').addEventListener('click', function() {
+        document.getElementById('search-icon-desktop').click();
+    });
+});
+</script>
+{{ end }}

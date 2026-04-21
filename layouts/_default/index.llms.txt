@@ -1,0 +1,17 @@
+# {{ site.Title }}
+
+> {{ site.Params.description }}
+
+# Navigation
+
+- [Home]({{ site.BaseURL }})
+- [Posts]({{ "posts/" | absURL }})
+- [Series]({{ "series/" | absURL }})
+- [About]({{ "about/" | absURL }})
+- [Full Content (llms-full.txt)]({{ "llms-full.txt" | absURL }})
+
+# Latest Posts
+
+{{ range first 10 (where site.RegularPages "Section" "posts") -}}
+- [{{ .Title }}]({{ .Permalink }})
+{{ end -}}

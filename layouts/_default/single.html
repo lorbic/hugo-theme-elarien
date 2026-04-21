@@ -1,0 +1,97 @@
+{{ define "main" }}
+
+<article class="post-manuscript">
+  <div class="container">
+    <div class="manuscript-grid">
+      <!-- Sidebar: Meta & TOC -->
+      <aside class="manuscript-sidebar">
+        <div class="sidebar-sticky-content">
+          {{ if and .TableOfContents (ne .Params.toc false) }}
+          <nav class="manuscript-toc" aria-label="Table of Contents">
+            <span class="sidebar-label">Contents</span>
+            {{ .TableOfContents }}
+          </nav>
+          <div class="manuscript-ad-block">
+            {{ partial "extras-ad.html" . }}
+          </div>
+          {{ end }}
+
+          <div class="manuscript-meta-block author-verification-block">
+            <span class="sidebar-label">Author</span>
+            <a href="{{ site.Params.author_url }}" class="author-verification-link" target="_blank" rel="noopener">
+              <img src='{{ "images/170335550-48p.jpg" | relURL }}' alt="{{ site.Params.author }}" class="author-avatar" width="24" height="24" loading="lazy">
+              <div class="author-details">
+                <span class="author-name">{{ site.Params.author }}</span>
+                <span class="author-role">Systems Engineer</span>
+              </div>
+            </a>
+          </div>
+
+          <div class="manuscript-meta-block">
+            <span class="sidebar-label">Log Entry Type</span>
+            <span class="meta-value mono">{{ if ge .WordCount 1000 }}Deep Dive{{ else }}Technical Article{{ end }}</span>
+          </div>
+
+          <div class="manuscript-meta-block">
+            <span class="sidebar-label">Share</span>
+            <div class="share-links">
+              <a href="#" onclick="window.open('https://twitter.com/intent/tweet?text={{ .Title }}&url={{ .Permalink }}', '_blank')" aria-label="Share on X">{{ partial "icon" "x-twitter" }}</a>
+              <a href="#" onclick="window.open('https://www.linkedin.com/sharing/share-offsite/?url={{ .Permalink }}', '_blank')" aria-label="Share on LinkedIn">{{ partial "icon" "linkedin" }}</a>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="manuscript-content">
+        {{ partial "series-timeline.html" . }}
+
+        <div class="post-container">
+          {{ .Content }}
+        </div>
+
+        {{ partial "toc-fab.html" . }}
+
+        <!-- Post Footer Pager -->
+        <footer class="manuscript-footer">
+          {{ $sectionPages := where .Site.RegularPages "Section" "posts" }}
+          {{ $current := . }}
+          {{ $index := -1 }}
+  
+          {{ range $i, $p := $sectionPages }}
+          {{ if eq $p.RelPermalink $current.RelPermalink }}
+          {{ $index = $i }}
+          {{ end }}
+          {{ end }}
+  
+          <div class="manuscript-pager">
+            {{ if ge (add $index 1) (len $sectionPages) | not }}
+            {{ $prev := index $sectionPages (add $index 1) }}
+            <a href="{{ $prev.RelPermalink }}" class="pager-item prev">
+              <span class="pager-label">Previous</span>
+              <span class="pager-title">{{ $prev.Title }}</span>
+            </a>
+            {{ end }}
+  
+            {{ if gt $index 0 }}
+            {{ $next := index $sectionPages (sub $index 1) }}
+            <a href="{{ $next.RelPermalink }}" class="pager-item next">
+              <span class="pager-label">Next</span>
+              <span class="pager-title">{{ $next.Title }}</span>
+            </a>
+            {{ end }}
+          </div>
+
+          {{ partial "random-post-link.html" . }}
+          
+          <!-- Series Navigator -->
+          {{ partial "series-navigator.html" . }}
+
+          {{ partial "comments.html" . }}
+        </footer>
+      </main>
+    </div>
+  </div>
+</article>
+
+{{ end }}

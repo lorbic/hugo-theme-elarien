@@ -1,0 +1,56 @@
+{{- $nodes := slice -}}
+{{- $links := slice -}}
+
+{{- /* Add the Root Node */ -}}
+{{- $nodes = $nodes | append (dict "id" "root" "name" "Lorbic.com" "group" 0 "val" 20) -}}
+
+{{- /* Add Taxonomy Nodes (Tags, Categories, Series) */ -}}
+{{- range $name, $taxonomy := .Site.Taxonomies.tags -}}
+  {{- $url := printf "/tags/%s/" ($name | urlize) -}}
+  {{- $nodes = $nodes | append (dict "id" (printf "tag-%s" $name) "name" (printf "#%s" $name) "group" 1 "val" (add 5 (len $taxonomy)) "url" $url) -}}
+  {{- $links = $links | append (dict "source" "root" "target" (printf "tag-%s" $name)) -}}
+{{- end -}}
+
+{{- range $name, $taxonomy := .Site.Taxonomies.categories -}}
+  {{- $url := printf "/categories/%s/" ($name | urlize) -}}
+  {{- $nodes = $nodes | append (dict "id" (printf "cat-%s" $name) "name" $name "group" 2 "val" (add 8 (len $taxonomy)) "url" $url) -}}
+  {{- $links = $links | append (dict "source" "root" "target" (printf "cat-%s" $name)) -}}
+{{- end -}}
+
+{{- range $name, $taxonomy := .Site.Taxonomies.series -}}
+  {{- $url := printf "/series/%s/" ($name | urlize) -}}
+  {{- $nodes = $nodes | append (dict "id" (printf "ser-%s" $name) "name" $name "group" 3 "val" (add 10 (len $taxonomy)) "url" $url) -}}
+  {{- $links = $links | append (dict "source" "root" "target" (printf "ser-%s" $name)) -}}
+{{- end -}}
+
+{{- /* Add Post Nodes and connect them to their Taxonomies */ -}}
+{{- range where .Site.RegularPages "Type" "in" (slice "posts" "til") -}}
+  {{- $postID := .RelPermalink -}}
+  {{- $val := 5 -}}
+  {{- if eq .Type "til" }}{{ $val = 3 }}{{ end -}}
+  
+  {{- $nodes = $nodes | append (dict "id" $postID "name" .Title "group" 4 "val" $val "url" .RelPermalink) -}}
+  
+  {{- with .Params.tags -}}
+    {{- range . -}}
+      {{- $tagID := printf "tag-%s" (. | urlize) -}}
+      {{- $links = $links | append (dict "source" $postID "target" $tagID) -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- with .Params.categories -}}
+    {{- range . -}}
+      {{- $catID := printf "cat-%s" (. | urlize) -}}
+      {{- $links = $links | append (dict "source" $postID "target" $catID) -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- with .Params.series -}}
+    {{- range . -}}
+      {{- $serID := printf "ser-%s" (. | urlize) -}}
+      {{- $links = $links | append (dict "source" $postID "target" $serID) -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- dict "nodes" $nodes "links" $links | jsonify -}}

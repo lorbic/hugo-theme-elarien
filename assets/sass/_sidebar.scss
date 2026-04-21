@@ -1,0 +1,70 @@
+.sidebar-container {
+  padding-bottom: $space-huge;
+
+  section {
+    margin-bottom: $space-xxl;
+  }
+
+  h2.sidebar-heading {
+    font-family: $font-family-monospace;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: $space-md;
+    padding-bottom: $space-sm;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-color-light);
+
+    a {
+      color: inherit;
+      text-decoration: none;
+      &:hover { color: var(--brand-primary); }
+    }
+  }
+}
+
+.short-about {
+  margin-bottom: $space-xxl;
+
+  a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+
+    img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin: 0 auto $space-md;
+      display: block;
+      border: 1px solid var(--border-color);
+      padding: 4px;
+    }
+
+    .short-about-author-name {
+      text-align: center;
+      border: none;
+      margin-bottom: $space-xs;
+      color: var(--text-color);
+    }
+
+    p {
+      margin-bottom: $space-md;
+      font-size: 14px;
+    }
+  }
+}
+
+.short-about-author-name {
+  font-family: $font-family-serif;
+  font-size: 1.25rem;
+  font-weight: 800;
+  margin: $space-sm 0;
+}
+
+.featured-tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-md;
+}

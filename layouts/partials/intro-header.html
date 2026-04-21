@@ -1,0 +1,92 @@
+{{ $series := (.GetTerms "series")}}
+
+{{ if not (eq .Kind "404") }}
+<header class="page-header-modern {{ if .IsPage }}is-post{{ end }} reveal-stagger">
+  {{ partial "header-graphic.html" . }}
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="header-grid">
+          {{ if .IsPage }}
+            <div class="header-meta-sidebar reveal-item">
+              <div class="meta-data-item">
+                <span class="label">Date</span>
+                <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "Jan 2, 2006" }}</time>
+              </div>
+              <div class="meta-data-item">
+                <span class="label">Reading Time</span>
+                <span>{{ .ReadingTime }} min</span>
+              </div>
+              {{ if (len $series) }}
+              <div class="meta-data-item">
+                <span class="label">Series</span>
+                {{ range $series }}
+                <a href="{{ .Page.RelPermalink }}" class="series-link">{{ .LinkTitle }}</a>
+                {{ end }}
+              </div>
+              {{ end }}
+              <div class="meta-data-item">
+                <span class="label">Ask AI</span>
+                <div class="ai-dropdown">
+                  <button class="ai-dropdown-btn" aria-label="Ask AI Models">
+                    <span>Consult LLM</span>
+                    {{ partial "icon" "chevron-down" }}
+                  </button>
+                  <div class="ai-dropdown-content">
+                    {{ $mdLink := printf "%sindex.md" .Permalink }}
+                    {{ $prompt := (printf "Read this technical article from lorbic.com: %s. Focus on the implementation details and provide a concise summary or answer my specific questions about it." $mdLink) }}
+                    <a href="https://chatgpt.com/?q={{ $prompt | urlquery }}" target="_blank" rel="noopener noreferrer">
+                      {{ partial "icon" "robot" }} ChatGPT
+                    </a>
+                    <a href="https://www.perplexity.ai/search?q={{ $prompt | urlquery }}" target="_blank" rel="noopener noreferrer">
+                      {{ partial "icon" "search" }} Perplexity
+                    </a>
+                    <a href="https://gemini.google.com/app" target="_blank" rel="noopener noreferrer" class="copy-prompt" data-prompt="{{ $prompt }}">
+                      {{ partial "icon" "magic" }} Gemini (Copy Prompt)
+                    </a>
+                    <a href="https://claude.ai/new" target="_blank" rel="noopener noreferrer" class="copy-prompt" data-prompt="{{ $prompt }}">
+                      {{ partial "icon" "brain" }} Claude (Copy Prompt)
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="header-main-content">
+              <h1 class="page-title-modern reveal-item">{{ .Title }}</h1>
+              {{ if or .Description .Params.description }}
+                <p class="page-subtitle-modern reveal-item">{{ .Description | default .Params.description }}</p>
+              {{ else if .Params.subtitle }}
+                <p class="page-subtitle-modern reveal-item">{{ .Params.subtitle }}</p>
+              {{ end }}
+              <div class="header-tags-modern reveal-item">
+                {{ partial "tags.html" . }}
+              </div>
+              <div class="estimator-chip reveal-item">
+                {{ $codeBlocks := len (findRE "(?s){{< code.*? >}}.*?(?:{{< /code >}})" .RawContent) }}
+                {{ $extLinks := len (findRE "http[s]?://" .RawContent) }}
+                <span class="estimator-item">WORDS: {{ .WordCount }}</span>
+                <span class="estimator-divider">|</span>
+                <span class="estimator-item">CODE BLOCKS: {{ $codeBlocks }}</span>
+                <span class="estimator-divider">|</span>
+                <span class="estimator-item">EXT. LINKS: {{ $extLinks }}</span>
+              </div>
+            </div>
+
+          {{ else }}
+            <div class="header-main-content">
+              {{ if .IsHome }}
+                <h1 class="page-title-modern is-home-title reveal-item">{{ site.Title }}.<span class="static-cursor">_</span></h1>
+                <p class="page-subtitle-modern reveal-item">{{ site.Params.description }}</p>
+              {{ else }}
+                <h1 class="page-title-modern reveal-item">{{ .Title }}</h1>
+                <p class="page-subtitle-modern reveal-item">{{ .Description | default .Params.description }}</p>
+              {{ end }}
+            </div>
+          {{ end }}
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+{{ end }}

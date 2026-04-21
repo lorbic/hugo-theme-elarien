@@ -1,0 +1,33 @@
+# {{ .Site.Title }}
+
+> {{ .Site.Params.description | default "A blog about technology." }}
+
+This file provides guidance for Large Language Models on how to best use the content from {{ .Site.Title }}.
+
+## Docs
+
+- [About]({{ "about/index.html.md" | absURL }}): Learn about the purpose of this website.
+{{- with .Site.GetPage "/posts" }}
+- [Posts]({{ .Permalink }}index.html.md): List of all blog posts.
+{{- end }}
+{{- with .Site.GetPage "/series" }}
+- [Series]({{ .Permalink }}index.html.md): List of all series.
+{{- end }}
+{{- with .Site.GetPage "/categories" }}
+- [Categories]({{ .Permalink }}index.html.md): List of all post categories.
+{{- end }}
+{{- with .Site.GetPage "/tags" }}
+- [Tags]({{ .Permalink }}index.html.md): List of all post tags.
+{{- end }}
+{{- with .Site.GetPage "/til" }}
+- [Today I Learned (TIL)]({{ .Permalink }}index.html.md): Short posts about things I've learned.
+{{- end }}
+
+## Recent Posts
+{{- range first 10 (where .Site.RegularPages "Type" "posts") }}
+- [{{ .Title }}]({{ .Permalink }}index.html.md): {{ .Summary | plainify | truncate 100 }}
+{{- end }}
+
+## Optional
+
+- [Sitemap]({{ "sitemap.xml" | absURL }}): For a complete list of all pages.

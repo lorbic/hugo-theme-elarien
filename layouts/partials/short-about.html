@@ -1,0 +1,27 @@
+<section class="visible-md visible-lg">
+  {{ with site.GetPage "/about" }}
+  <h2 class="sidebar-heading"><a href='{{"about/" | relURL }}'>ABOUT ME</a></h2>
+  {{ else }}
+  <h2 class="sidebar-heading">ABOUT ME</h2>
+  {{ end }}
+
+  {{ $sidebar := site.Params.sidebar }}
+  <div class="short-about">
+    <a href="{{ site.Params.author_url }}" style="display: block; text-decoration: none; color: inherit;">
+      <img 
+        src='{{ "images/170335550-140p.jpg" | relURL }}' 
+        srcset='{{ "images/170335550-140p.jpg" | relURL }} 1x, {{ "images/170335550-240p.jpg" | relURL }} 2x'
+        alt="{{ site.Params.author }} avatar" 
+        width="120" 
+        height="120" 
+        loading="lazy" 
+      />
+      <div class="short-about-author-name">{{ site.Params.author }}</div>
+    </a>
+    {{ with $sidebar.bio }}
+    <p>{{ $sidebar.bio }}</p>
+    {{ end }}
+    <!-- SNS Link -->
+    {{ partial "sns-links.html" (dict "center" false "social" site.Params.social ) }}
+  </div>
+</section>

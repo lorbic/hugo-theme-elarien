@@ -1,0 +1,39 @@
+<div class="newsletter-block reveal-item">
+    <div class="newsletter-header">
+        <span class="newsletter-label">Dispatch // Subscription</span>
+        <h3 class="newsletter-headline">The Internet is Breaking.</h3>
+        <p class="newsletter-subline">Let's figure out why. Get in-depth technical deep dives and architectural insights delivered straight to your inbox.</p>
+    </div>
+
+    <form method="post" action="https://mailer.heartfire.lorbic.com/subscription/form" class="newsletter-form listmonk-form">
+        <input type="hidden" name="nonce" />
+        <input type="hidden" name="l" value="d3a1342b-0205-4153-9cfe-52ef3b1ef880" />
+
+        <div class="newsletter-inputs">
+            <div class="input-group">
+                <input type="email" name="email" required placeholder="Email Address" class="newsletter-input" />
+            </div>
+            <div class="input-group">
+                <input type="text" name="name" placeholder="Name (optional)" class="newsletter-input" />
+            </div>
+            <button type="submit" class="newsletter-submit">Join the Dispatch</button>
+        </div>
+
+        <div class="newsletter-captcha">
+            <altcha-widget challengeurl="https://mailer.heartfire.lorbic.com/api/public/captcha/altcha"></altcha-widget>
+        </div>
+
+        <div class="newsletter-footer">
+            <p>No spam. Unsubscribe anytime. By subscribing, you agree to the <a href="/about/privacy/">Privacy Policy</a>.</p>
+            <span class="newsletter-powered">Powered by Lorbic Mailer</span>
+        </div>
+
+        <div class="success-message" style="display: none;">
+            <div class="success-content">
+                {{ partial "icon" "check-circle" }}
+                <h3>Welcome to the Fold.</h3>
+                <p>Check your inbox to confirm your subscription.</p>
+            </div>
+        </div>
+    </form>
+</div>

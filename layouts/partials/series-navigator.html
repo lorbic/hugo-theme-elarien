@@ -1,0 +1,53 @@
+{{ $current := . }}
+{{ $seriesList := .Params.series }}
+
+{{ if $seriesList }}
+  {{ $seriesName := index $seriesList 0 }}
+  {{ $seriesPath := printf "/series/%s" ($seriesName | urlize) }}
+  {{ $seriesData := site.GetPage $seriesPath }}
+  
+  {{ if and $seriesData (gt (len $seriesData.Pages) 1) }}
+    {{/* Sort pages chronologically (oldest first) for a series */}}
+    {{ $seriesPages := $seriesData.Pages.Reverse }}
+    
+    <div class="series-navigator-wrapper reveal-item">
+      <div class="series-navigator">
+        <div class="series-header">
+          <span class="series-label">Reading Series</span>
+          <h4 class="series-title">{{ $seriesName }}</h4>
+        </div>
+        
+        <ol class="series-steps" id="series-steps-list">
+          {{ range $index, $page := $seriesPages }}
+            {{ $isCurrent := eq $current.RelPermalink $page.RelPermalink }}
+            {{ $isPast := gt $current.Date.Unix $page.Date.Unix }}
+            
+            <li class="series-step {{ if $isCurrent }}current{{ else if $isPast }}completed{{ else }}upcoming{{ end }}" data-index="{{ $index }}">
+              <a href="{{ $page.RelPermalink }}" class="step-link">
+                <span class="step-indicator">
+                  {{ if $isCurrent }}
+                    <span class="pulse"></span>
+                  {{ else if $isPast }}
+                    {{ partial "icon" "check" }}
+                  {{ else }}
+                    {{ add $index 1 }}
+                  {{ end }}
+                </span>
+                <span class="step-title">{{ $page.Title }}</span>
+              </a>
+            </li>
+          {{ end }}
+        </ol>
+
+        {{ if gt (len $seriesPages) 5 }}
+        <div class="series-toggle-wrapper">
+          <button id="series-toggle-btn" class="series-toggle-btn">
+            <span class="toggle-text">Show all {{ len $seriesPages }} parts</span>
+            {{ partial "icon" "chevron-down" }}
+          </button>
+        </div>
+        {{ end }}
+      </div>
+    </div>
+  {{ end }}
+{{ end }}

@@ -1,0 +1,12 @@
+{{ $friends := site.Params.friends }}
+{{ with $friends }}
+<section>
+  <hr>
+  <h2 class="sidebar-heading">FRIENDS</h2>
+  <ul class="list-inline">
+    {{ range $friends }}
+    <li><a href="{{ .url }}" target="_blank">{{ .name }}</a></li>
+    {{ end }}
+  </ul>
+</section>
+{{ end }}

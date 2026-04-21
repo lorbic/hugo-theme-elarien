@@ -1,0 +1,48 @@
+{{ define "container" }}
+{{ $pages := where .Site.RegularPages "Layout" "_default" }}
+{{ $pinned := where $pages "Params.pinned" true }}
+{{ $regular := where $pages "Params.pinned" "ne" true }}
+
+{{ $paginator := .Paginate $regular }}
+
+{{ if and (not $paginator.HasPrev) (gt (len $pinned) 0) }}
+<div class="til-log-header">
+    <span class="log-label">Technical Journal // Featured Articles</span>
+    <div class="log-line"></div>
+</div>
+
+<div class="featured-posts">
+    <!-- <h2>Featured Posts</h2> -->
+    {{ range $pinned }}
+    {{ .Render "summary" }}
+    {{ end }}
+</div>
+{{ end }}
+
+<div class="til-log-header">
+    <span class="log-label">Technical Journal // Recent Articles</span>
+    <div class="log-line"></div>
+</div>
+
+<div class="post-list-modern reveal-stagger">
+{{ range $paginator.Pages }}
+{{ .Render "summary" }}
+{{ end }}
+</div>
+
+{{ if or $paginator.HasPrev $paginator.HasNext }}
+<ul class="pager">
+    {{ if $paginator.HasPrev }}
+    <li class="previous">
+        <a href="{{ .Paginator.Prev.URL }}">&larr; Newer Posts</a>
+    </li>
+    {{ end }}
+    {{ if $paginator.HasNext }}
+    <li class="next">
+        <a href="{{ .Paginator.Next.URL }}">Older Posts &rarr;</a>
+    </li>
+    {{ end }}
+</ul>
+{{ end }}
+
+{{ end }}

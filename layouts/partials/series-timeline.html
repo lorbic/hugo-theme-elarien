@@ -1,0 +1,32 @@
+{{ $current := . }}
+{{ $seriesList := .Params.series }}
+{{ if $seriesList }}
+  {{ $seriesName := index $seriesList 0 }}
+  {{ $seriesPath := printf "/series/%s" ($seriesName | urlize) }}
+  {{ $seriesData := site.GetPage $seriesPath }}
+  {{ if and $seriesData (gt (len $seriesData.Pages) 1) }}
+    {{ $seriesPages := $seriesData.Pages.Reverse }}
+    <div class="series-subway-map" aria-label="Series timeline">
+      <div class="subway-track-container">
+        <div class="subway-track">
+          {{ range $index, $page := $seriesPages }}
+            {{ $isCurrent := eq $current.RelPermalink $page.RelPermalink }}
+            {{/* Using weight or date to compare past vs future */}}
+            {{ $isPast := gt $current.Date.Unix $page.Date.Unix }}
+            
+            <a href="{{ $page.RelPermalink }}" class="subway-node {{ if $isCurrent }}current{{ else if $isPast }}past{{ else }}future{{ end }}" title="{{ $page.Title }}">
+              {{ if $isCurrent }}<span class="pulse-ring"></span>{{ end }}
+            </a>
+            
+            {{ if lt (add $index 1) (len $seriesPages) }}
+              <div class="subway-segment {{ if $isPast }}past{{ else if $isCurrent }}transition{{ else }}future{{ end }}"></div>
+            {{ end }}
+          {{ end }}
+        </div>
+      </div>
+      <div class="subway-label">
+        Reading part {{ range $i, $p := $seriesPages }}{{ if eq $current.RelPermalink $p.RelPermalink }}{{ add $i 1 }}{{ end }}{{ end }} of <strong><a href="{{ $seriesPath }}">{{ $seriesName }}</a></strong>
+      </div>
+    </div>
+  {{ end }}
+{{ end }}

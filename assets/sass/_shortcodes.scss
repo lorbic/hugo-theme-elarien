@@ -1,0 +1,188 @@
+// Shortcode Styles (Grid-Locked Neo-Modern)
+// ===========================================
+
+// Unified Code & Terminal Container Base
+.code-block, .terminal {
+  margin: $space-xl 0;
+  border: 1px solid var(--border-color);
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  border-radius: 0; // Fixed structural look
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+
+  &.is-copying {
+    border-color: var(--brand-primary);
+    animation: copy-flash 1.5s ease-out;
+  }
+
+  .code-header, .terminal-header {
+    background-color: rgba(0, 0, 0, 0.05);
+    padding: 8px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    font-family: $font-family-monospace;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-color-light);
+
+    .header-left {
+      display: flex;
+      gap: $space-md;
+      align-items: center;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+
+      .copy-code-button {
+        background: none;
+        border: none;
+        color: var(--text-color-light);
+        cursor: pointer;
+        padding: 4px;
+        border-radius: 4px;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+
+        &:hover {
+          color: var(--brand-primary);
+          background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        &.copy-success {
+          color: #2ea043;
+        }
+
+        i {
+          width: 16px;
+          height: 16px;
+        }
+      }
+    }
+  }
+
+  .code-body, .terminal-body {
+    padding: 0;
+    overflow-x: auto;
+    background-color: #1e1e1e; // Always dark for technical snippets
+
+    pre {
+      margin: 0;
+      padding: 16px;
+      background: none !important;
+      border: none;
+      
+      code {
+        font-size: 15px;
+        line-height: 1.6;
+        font-family: $font-family-monospace !important;
+        color: #d4d4d4;
+        background: transparent !important;
+        padding: 0;
+      }
+    }
+  }
+
+  // Wrapped content modifier
+  &.wrap pre {
+    white-space: pre-wrap !important;
+    word-break: break-all !important;
+  }
+}
+
+@keyframes copy-flash {
+  0% { box-shadow: 0 0 0 0 rgba(52, 85, 219, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(52, 85, 219, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(52, 85, 219, 0); }
+}
+
+// Custom Terminal Prompt
+.terminal .terminal-body {
+  .prompt {
+    color: #6a9955;
+    user-select: none;
+    &::before { content: "$ "; }
+  }
+  .command { color: #dcdcaa; }
+  .output { color: #9cdcfe; opacity: 0.8; }
+}
+
+// Modern Alert Boxes
+.alert-box {
+  margin: $space-huge 0;
+  padding: $space-xl $space-xl $space-xl $space-xl;
+  background-color: var(--body-background-color);
+  border: 1px solid var(--border-color);
+  border-left: 4px solid var(--brand-primary);
+  display: flex;
+  flex-direction: column;
+  gap: $space-sm;
+
+  .alert-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: $font-family-monospace;
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-color);
+
+    svg {
+      width: 14px;
+      height: 14px;
+      color: var(--brand-primary);
+    }
+  }
+
+  .alert-content {
+    font-size: 1.5rem; // Slightly smaller than body for contrast
+    line-height: 1.6;
+    color: var(--text-color-light);
+
+    p:last-child { margin-bottom: 0; }
+  }
+
+  // Contextual Colors
+  &.alert-tip      { border-left-color: #2ea043; .alert-title svg { color: #2ea043; } }
+  &.alert-note     { border-left-color: #388bfd; .alert-title svg { color: #388bfd; } }
+  &.alert-warning  { border-left-color: #d29922; .alert-title svg { color: #d29922; } }
+  &.alert-caution  { border-left-color: #f85149; .alert-title svg { color: #f85149; } }
+  &.alert-important { border-left-color: #8250df; .alert-title svg { color: #8250df; } }
+}
+
+// Download Button
+.download-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 24px;
+  background-color: var(--brand-primary);
+  color: white !important;
+  text-decoration: none !important;
+  font-family: $font-family-monospace;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: var(--link-hover-color);
+    transform: translateX(5px);
+  }
+
+  svg { width: 16px; height: 16px; }
+}

@@ -1,0 +1,12 @@
+<section>
+  {{ $bottom := .Scratch.Get "bottom" }}
+  {{ if $bottom }}
+  <hr class="hidden-sm hidden-xs">
+  {{ end }}
+  <h2 class="sidebar-heading"><a href="/tags/">Featured Tags</a></h2>
+  <div class="tags tags-sidebar">
+    {{ range first 20 site.Taxonomies.tags.ByCount }}
+    <a class="tag" href="{{ .Page.RelPermalink }}" aria-label="View posts tagged with {{ .Page.Title | lower }}" title="Tag: {{ .Page.Title | lower }}">{{ .Page.Title | lower }}<span class="sr-only"> topic</span></a>
+    {{ end }}
+  </div>
+</section>

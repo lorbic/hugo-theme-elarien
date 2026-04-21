@@ -1,0 +1,118 @@
+// Minimalist Grid System (Bootstrap Replacement)
+// ===========================================
+
+* {
+  box-sizing: border-box;
+}
+
+.container {
+  width: 100%;
+  padding-right: $space-md;
+  padding-left: $space-md;
+  margin-right: auto;
+  margin-left: auto;
+  max-width: 100%;
+
+  @media (min-width: $breakpoint-sm) { max-width: 540px; }
+  @media (min-width: $breakpoint-md) { max-width: 720px; }
+  @media (min-width: $breakpoint-lg) { max-width: 960px; }
+  @media (min-width: $breakpoint-xl) { max-width: 1140px; }
+  @media (min-width: $breakpoint-xxl) { max-width: 1320px; }
+}
+
+.container-fluid {
+  width: 100%;
+  padding-right: $space-md;
+  padding-left: $space-md;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -$space-md;
+  margin-left: -$space-md;
+}
+
+[class*="col-"] {
+  position: relative;
+  width: 100%;
+  padding-right: $space-md;
+  padding-left: $space-md;
+}
+
+// Helper mixin for generating columns
+@mixin make-cols($suffix: "") {
+  $prefix: if($suffix == "", "col-", "col-#{$suffix}-");
+  
+  @for $i from 1 through 12 {
+    .#{$prefix}#{$i} {
+      flex: 0 0 ($i / 12 * 100%);
+      max-width: ($i / 12 * 100%);
+    }
+  }
+
+  @for $i from 0 through 11 {
+    .#{$prefix}offset-#{$i} {
+      margin-left: ($i / 12 * 100%);
+    }
+  }
+}
+
+// Generate base columns (xs)
+@include make-cols("xs");
+@include make-cols(""); // Support for plain col-*
+
+@media (min-width: $breakpoint-sm) { @include make-cols("sm"); }
+@media (min-width: $breakpoint-md) { @include make-cols("md"); }
+@media (min-width: $breakpoint-lg) { @include make-cols("lg"); }
+@media (min-width: $breakpoint-xl) { @include make-cols("xl"); }
+
+// Visibility Utilities
+.visible-xs, .visible-sm, .visible-md, .visible-lg { display: none !important; }
+
+@media (max-width: ($breakpoint-sm - 1)) { .visible-xs { display: block !important; } }
+@media (min-width: $breakpoint-sm) and (max-width: ($breakpoint-md - 1)) { .visible-sm { display: block !important; } }
+@media (min-width: $breakpoint-md) and (max-width: ($breakpoint-lg - 1)) { .visible-md { display: block !important; } }
+@media (min-width: $breakpoint-lg) { .visible-lg { display: block !important; } }
+
+.hidden-xs { @media (max-width: ($breakpoint-sm - 1)) { display: none !important; } }
+.hidden-sm { @media (min-width: $breakpoint-sm) and (max-width: ($breakpoint-md - 1)) { display: none !important; } }
+.hidden-md { @media (min-width: $breakpoint-md) and (max-width: ($breakpoint-lg - 1)) { display: none !important; } }
+.hidden-lg { @media (min-width: $breakpoint-lg) { display: none !important; } }
+
+// Common Bootstrap helpers
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+.text-center { text-align: center !important; }
+.text-right { text-align: right !important; }
+.text-left { text-align: left !important; }
+.text-uppercase { text-transform: uppercase !important; }
+
+// Inline List
+.list-inline {
+  padding-left: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+
+  &.text-center {
+    justify-content: center;
+  }
+
+  > li {
+    display: inline-block;
+  }
+}

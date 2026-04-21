@@ -1,0 +1,14 @@
+{{- $lang := .Type -}}
+<div class="custom-code-block-wrapper" {{ with $lang }}data-lang="{{ upper . }}"{{ end }}>
+  {{- if $lang -}}
+    <div class="code-language-badge">{{ upper $lang }}</div>
+  {{- end -}}
+  <div class="code-content-window">
+    {{- /* We let Hugo render the standard chroma syntax highlighting via `transform.Highlight` */ -}}
+    {{- $opts := dict "lineNos" true "lineNumbersInTable" false "tabWidth" 4 -}}
+    {{- transform.Highlight .Inner $lang $opts -}}
+  </div>
+  <button class="code-show-more-btn" aria-label="Expand Code Block">
+    <span>Show Full Snippet {{ partial "icon" "chevron-down" }}</span>
+  </button>
+</div>

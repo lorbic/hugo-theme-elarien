@@ -1,0 +1,100 @@
+{{- /* Automated WebP Pipeline for Local Images */ -}}
+{{- $url := urls.Parse .Destination -}}
+{{- $alt := .Text -}}
+{{- $title := .Title -}}
+
+{{- /* Smart Auto-Eager Loading for the First Image (LCP) */ -}}
+{{- $isFirstImage := false -}}
+{{- if not (.Page.Scratch.Get "hasRenderedFirstImage") -}}
+  {{- $isFirstImage = true -}}
+  {{- .Page.Scratch.Set "hasRenderedFirstImage" true -}}
+{{- end -}}
+
+{{- $loading := "lazy" -}}
+{{- $fetchpriority := "auto" -}}
+
+{{- if $isFirstImage -}}
+  {{- $loading = "eager" -}}
+  {{- $fetchpriority = "high" -}}
+{{- end -}}
+
+{{- /* Allow manual overrides via attributes */ -}}
+{{- if .Attributes.loading -}}
+  {{- $loading = .Attributes.loading -}}
+{{- end -}}
+{{- if .Attributes.fetchpriority -}}
+  {{- $fetchpriority = .Attributes.fetchpriority -}}
+{{- end -}}
+{{- $class := default "img-fluid" .Attributes.class -}}
+
+{{- if $url.IsAbs -}}
+  {{- /* External Image - Apply attributes dynamically */ -}}
+  <img src="{{ .Destination | safeURL }}" alt="{{ $alt }}" {{ with $title }}title="{{ . }}"{{ end }} loading="{{ $loading }}" fetchpriority="{{ $fetchpriority }}" class="{{ $class }}" />
+{{- else -}}
+  {{- /* Local Image - Search for it as a Page Resource or Global Resource */ -}}
+  {{- $image := .Page.Resources.GetMatch $url.Path -}}
+  
+  {{- /* If not a page resource, check global assets */ -}}
+  {{- if not $image -}}
+    {{- $image = resources.Get $url.Path -}}
+  {{- end -}}
+
+  {{- /* Process Image if Found */ -}}
+  {{- if $image -}}
+    {{- /* 
+        Check if we can resize this image.
+        Some Hugo environments don't support WebP as an input format for resizing, 
+        even if they can output WebP.
+    */ -}}
+    {{- $canResize := not (strings.HasSuffix $image.RelPermalink ".webp") -}}
+    
+    {{- $widths := slice 480 800 1200 -}}
+    {{- $srcsetWebp := slice -}}
+    {{- $srcsetAvif := slice -}}
+    
+    {{- if $canResize -}}
+      {{- range $widths -}}
+        {{- if ge $image.Width . -}}
+          {{- /* Always generate WebP */ -}}
+          {{- $srcWebp := $image.Resize (printf "%dx webp q90" .) -}}
+          {{- $srcsetWebp = $srcsetWebp | append (printf "%s %dw" $srcWebp.RelPermalink .) -}}
+          
+          {{- /* FEATURE FLAG: Only generate AVIF if explicitly enabled in config */ -}}
+          {{- if site.Params.generate_avif -}}
+            {{- $srcAvif := $image.Resize (printf "%dx avif q85" .) -}}
+            {{- $srcsetAvif = $srcsetAvif | append (printf "%s %dw" $srcAvif.RelPermalink .) -}}
+          {{- end -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+    
+    {{- /* Prepare original WebP */ -}}
+    {{- $originalWebpRel := $image.RelPermalink -}}
+    {{- if $canResize -}}
+      {{- $originalWebp := $image.Resize (printf "%dx%d webp q90" $image.Width $image.Height) -}}
+      {{- $originalWebpRel = $originalWebp.RelPermalink -}}
+      {{- $srcsetWebp = $srcsetWebp | append (printf "%s %dw" $originalWebpRel $image.Width) -}}
+    {{- end -}}
+    
+    <picture class="optimized-image-container">
+      {{- /* AVIF Source - List first for high-performance negotiation */ -}}
+      {{- if and $canResize site.Params.generate_avif -}}
+        {{- /* Add original AVIF size to srcset */ -}}
+        {{- $originalAvif := $image.Resize (printf "%dx%d avif q85" $image.Width $image.Height) -}}
+        {{- $srcsetAvif = $srcsetAvif | append (printf "%s %dw" $originalAvif.RelPermalink $image.Width) -}}
+        <source srcset="{{ delimit $srcsetAvif ", " }}" sizes="(max-width: 800px) 100vw, 800px" type="image/avif">
+      {{- end -}}
+
+      {{- /* WebP Source - Standard Fallback */ -}}
+      {{- if $canResize -}}
+        <source srcset="{{ delimit $srcsetWebp ", " }}" sizes="(max-width: 800px) 100vw, 800px" type="image/webp">
+      {{- end -}}
+      
+      {{- /* Core Image Element (Legacy/Default) */ -}}
+      <img src="{{ $originalWebpRel }}" width="{{ $image.Width }}" height="{{ $image.Height }}" alt="{{ $alt }}" {{ with $title }}title="{{ . }}"{{ end }} loading="{{ $loading }}" fetchpriority="{{ $fetchpriority }}" class="{{ $class }}" />
+    </picture>
+  {{- else -}}
+    {{- /* Fallback if the image couldn't be resolved (e.g. static folder without mounts) */ -}}
+    <img src="{{ .Destination | safeURL }}" alt="{{ $alt }}" {{ with $title }}title="{{ . }}"{{ end }} loading="{{ $loading }}" fetchpriority="{{ $fetchpriority }}" class="{{ $class }}" />
+  {{- end -}}
+{{- end -}}

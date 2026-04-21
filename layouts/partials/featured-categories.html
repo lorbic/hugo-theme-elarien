@@ -1,0 +1,12 @@
+<section>
+  {{ $bottom := .Scratch.Get "bottom" }}
+  {{ if $bottom }}
+  <hr class="hidden-sm hidden-xs">
+  {{ end }}
+  <h2 class="sidebar-heading"><a href="/categories/">Categories</a></h2>
+  <div class="tags">
+    {{ range site.Taxonomies.categories }}
+    <a class="tag" href="{{ .Page.RelPermalink }}" aria-label="View posts in category {{ .Page.Title | lower }}" title="Category: {{ .Page.Title | lower }}">{{ .Page.Title | lower }}</a>
+    {{ end }}
+  </div>
+</section>

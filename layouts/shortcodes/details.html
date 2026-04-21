@@ -1,0 +1,14 @@
+<div class="details-block reveal-item">
+  <details {{ if .Get "open" }}open{{ end }}>
+    <summary>
+      <div class="summary-inner">
+        <span class="details-label">{{ .Get "label" | default "Glossary //" }}</span>
+        <span class="details-title">{{ .Get "title" }}</span>
+        {{ partial "icon" "plus" }}
+      </div>
+    </summary>
+    <div class="details-content">
+      {{ .Inner | markdownify }}
+    </div>
+  </details>
+</div>

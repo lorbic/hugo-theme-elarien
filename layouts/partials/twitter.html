@@ -1,0 +1,76 @@
+{{- $title := .Title -}}
+{{- $description := "" -}}
+{{- if .IsHome -}}
+{{- $description = site.Params.og_description | default site.Params.description -}}
+{{- else -}}
+{{- $description = .Description | default (.Summary | plainify | truncate 200) | default (site.Params.og_description | default
+site.Params.description) -}}
+{{- end -}}
+
+{{- /* Optimize title length for Twitter (70 chars max recommended) */ -}}
+{{- if not .IsHome -}}
+{{- $title = printf "%s | %s" .Title site.Title -}}
+{{- if gt (len $title) 70 -}}
+{{- $title = .Title -}}
+{{- end -}}
+{{- else -}}
+{{- /* For home page, use site title with og_description */ -}}
+{{- with site.Params.og_description -}}
+{{- $title = printf "%s - %s" site.Title . -}}
+{{- else -}}
+{{- $title = printf "%s - %s" site.Title site.Params.description -}}
+{{- end -}}
+{{- end -}}
+
+{{- /* Optimize description for Twitter (max 200 chars) */ -}}
+{{- if $description -}}
+{{- if gt (len $description) 200 -}}
+{{- $description = truncate 197 $description -}}
+{{- $description = printf "%s..." $description -}}
+{{- end -}}
+{{- end -}}
+
+{{- /* Get Twitter Card image - same as Open Graph */ -}}
+{{- $cardImage := "" -}}
+{{- with .Params.images -}}
+{{- $cardImage = index . 0 | absURL -}}
+{{- else -}}
+{{- with .Params.image -}}
+{{- $cardImage = . | absURL -}}
+{{- else -}}
+{{- with .Params.header_img -}}
+{{- $cardImage = . | absURL -}}
+{{- else -}}
+{{- with site.Params.og_image -}}
+{{- $cardImage = . | absURL -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
+{{- /* Twitter Card Type - use summary for square fallback, summary_large_image for post headers */ -}}
+{{- $twitterCardType := "summary_large_image" -}}
+{{- if strings.Contains $cardImage "170335550.jpeg" -}}
+{{- $twitterCardType = "summary" -}}
+{{- end -}}
+
+<meta name="twitter:card" content="{{ $twitterCardType }}" />
+<meta name="twitter:title" content="{{ $title }}" />
+<meta name="twitter:description" content="{{ $description }}" />
+
+{{- with $cardImage }}
+<meta name="twitter:image" content="{{ . }}" />
+<meta name="twitter:image:alt" content="{{ $title }}" />
+{{- end }}
+
+{{- with site.Params.social.twitter -}}
+<meta name="twitter:site" content="@{{ . }}" />
+{{- end -}}
+
+{{- with site.Params.twitter_handle -}}
+<meta name="twitter:site" content="{{ . }}" />
+{{- end -}}
+
+{{- with .Params.author_twitter -}}
+<meta name="twitter:creator" content="@{{ . }}" />
+{{- end -}}

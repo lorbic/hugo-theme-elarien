@@ -1,0 +1,25 @@
+$start-color: #f1f3f9;
+$end-color: #e2e8f0;
+$spread: {{ .spread }};
+$weighting: {{ .weighting }};
+
+@function tagColor() {
+    $sr: red($start-color);
+    $sg: green($start-color);
+    $sb: blue($start-color);
+    $incr-r: (red($end-color) - $sr) / $spread;
+    $incr-g: (green($end-color) - $sg) / $spread;
+    $incr-b: (blue($end-color) - $sb) / $spread;
+
+    $tag-color: rgb( $sr + $incr-r * $weighting, $sg + $incr-g * $weighting, $sb + $incr-b * $weighting );
+    
+    @return $tag-color;
+}
+
+.tag-color__{{ .count }} {
+    background-color: tagColor() !important;
+}
+
+[data-theme='dark'] .tag-color__{{ .count }} {
+    background-color: #2d3748 !important;
+}

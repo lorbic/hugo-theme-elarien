@@ -1,0 +1,65 @@
+{{ if (ne .Params.comment false) -}}
+  <section id="comments-container" style="margin-top: 64px; text-align: center;">
+    <button id="load-comments" type="button" class="btn">
+      Show Comments
+    </button>
+  </section>
+
+  <style>
+     #load-comments {
+      background-color: var(--background-color) !important;
+      border: 1px solid var(--border-color);
+      color: var(--text-color);
+     }
+    /* Slight darken effect on hover */
+    #load-comments:hover {
+      filter: brightness(80%);
+      transition: filter 0.2s ease-in-out;
+    }
+  </style>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const btn = document.getElementById("load-comments");
+      if (!btn) return;
+
+      btn.addEventListener("click", function () {
+        const container = document.getElementById("comments-container");
+        btn.remove(); // remove button after click
+
+        // Disqus
+        {{ if site.Config.Services.Disqus.Shortname }}
+        const d = document.createElement("div");
+        d.id = "disqus_thread";
+        container.appendChild(d);
+
+        const s = document.createElement("script");
+        s.src = "https://{{ site.Config.Services.Disqus.Shortname }}.disqus.com/embed.js";
+        s.setAttribute("data-timestamp", +new Date());
+        (document.head || document.body).appendChild(s);
+        {{ end }}
+
+        // Giscus
+        {{ $giscus := .Site.Params.giscus }}
+        {{ if $giscus.enable }}
+        const g = document.createElement("script");
+        g.src = "https://giscus.app/client.js";
+        g.async = true;
+        g.crossOrigin = "anonymous";
+        g.setAttribute("data-repo", "{{ $giscus.repo }}");
+        g.setAttribute("data-repo-id", "{{ $giscus.repo_id }}");
+        g.setAttribute("data-category", "{{ $giscus.category }}");
+        g.setAttribute("data-category-id", "{{ $giscus.category_id }}");
+        g.setAttribute("data-mapping", "pathname");
+        g.setAttribute("data-strict", "0");
+        g.setAttribute("data-reactions-enabled", "1");
+        g.setAttribute("data-emit-metadata", "0");
+        g.setAttribute("data-input-position", "{{ $giscus.input_position | default "top" }}");
+        g.setAttribute("data-theme", "{{ $giscus.theme | default "light" }}");
+        g.setAttribute("data-lang", "{{ $giscus.lang | default "en" }}");
+        container.appendChild(g);
+        {{ end }}
+      });
+    });
+  </script>
+{{ end }}

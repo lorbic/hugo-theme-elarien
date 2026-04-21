@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.LanguageCode }}" data-analytics="{{ site.Params.analytics.enable }}">
+
+<head>
+  <!-- 1. Technical Sovereignty: Immediate Theme -->
+  <script>
+    (function () {
+      const theme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', theme);
+      document.documentElement.style.colorScheme = theme;
+    })();
+  </script>
+
+  <!-- 2. Critical Render-Path Styles -->
+  <style>
+    :root {
+      --bg: #f8f9fa;
+      --text: #212529;
+    }
+
+    :root[data-theme='dark'] {
+      --bg: #1a202c;
+      --text: #e2e8f0;
+    }
+
+    html,
+    body {
+      background-color: var(--bg) !important;
+      color: var(--text);
+    }
+  </style>
+  <meta charset="utf-8">
+  <meta name="color-scheme" content="light dark">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="view-transition" content="same-origin">
+  <link rel="canonical" href="{{ .Permalink }}">
+  {{ $title := .Title | default site.Title }}
+  {{ if and .Title (not .IsHome) }}
+  {{ $title = printf "%s | %s" .Title site.Title }}
+  {{ end }}
+  <title>{{ $title }}</title>
+  {{ if .IsHome }}
+  <meta name="author" content="{{ site.Params.author }}">
+  {{ else if .Params.author }}
+  <meta name="author" content="{{ .Params.author }}">
+  {{ else }}
+  <meta name="author" content="{{ site.Params.author }}">
+  {{ end }}
+  {{ if .IsHome }}
+  <meta name="description" content="{{ site.Params.og_description | default site.Params.description }}">
+  {{ else }}
+  <meta name="description"
+    content="{{ .Description | default (.Summary | plainify | truncate 160) | default site.Params.og_description }}">
+  {{ end }}
+  <meta name="keywords" content="{{ (delimit .Keywords " ,") | default site.Params.keywords }}">
+  {{ with site.Params.social.mastodon.id }}
+  <meta name="fediverse:creator" content="{{ . }}">
+  <a rel="me" href="{{site.Params.social.mastodon.url}}" style="display: none;"></a>
+  {{ end }}
+  {{ partial "twitter.html" . }}
+  {{ partial "opengraph.html" . }}
+
+  <!-- Self-Hosted Variable Fonts -->
+  <link rel="preload" as="font" type="font/woff2" href="/fonts/geist-sans-variable.woff2" crossorigin="anonymous">
+  <link rel="preload" as="font" type="font/woff2" href="/fonts/ibm-plex-serif-v19-latin-regular.woff2"
+    crossorigin="anonymous">
+  <link rel="preload" as="font" type="font/woff2" href="/fonts/ibm-plex-serif-v19-latin-700.woff2"
+    crossorigin="anonymous">
+
+  <!-- Medium Zoom Library (Only load on individual pages/posts) -->
+  {{ if .IsPage }}
+  <script defer src="https://cdn.jsdelivr.net/npm/medium-zoom@1.1.0/dist/medium-zoom.min.js"></script>
+  {{ end }}
+
+  <!-- Main SCSS -->
+  {{ $options := dict "outputStyle" "compressed" "enableSourceMap" false "includePaths" (slice "sass")
+  }}
+  {{ $style := resources.Get "sass/main.scss" | css.Sass $options | postCSS | resources.Minify | resources.Fingerprint
+  }}
+
+  {{ if site.Params.inline_css }}
+  <style>
+    {
+        {
+        $style.Content | safeCSS
+      }
+    }
+  </style>
+  {{ else }}
+  <link rel="stylesheet" href="{{ $style.RelPermalink }}">
+  {{ end }}
+  <!-- Custom CSS -->
+  {{ range site.Params.custom_css }}
+  {{ $custom_template := resources.Get . }}
+  {{ if $custom_template }}
+  {{ $custom_style := $custom_template | css.Sass | resources.Fingerprint }}
+  <link rel="stylesheet" href="{{ $custom_style.RelPermalink }}">
+  {{ end }}
+  {{ end }}
+
+  <!-- Bundled Main JS (Lazysizes + Custom JS + Theme JS) -->
+  {{ $jsFiles := slice }}
+  
+  {{ $lazy := resources.Get "js/lazysizes.min.js" }}
+  {{ if $lazy }}{{ $jsFiles = $jsFiles | append $lazy }}{{ end }}
+  
+  {{ range site.Params.custom_js }}
+    {{ $custom := resources.Get . }}
+    {{ if $custom }}{{ $jsFiles = $jsFiles | append $custom }}{{ end }}
+  {{ end }}
+  
+  {{ $theme_js := resources.Get "js/theme.js" }}
+  {{ if $theme_js }}{{ $jsFiles = $jsFiles | append $theme_js }}{{ end }}
+
+  {{ $main_js := $jsFiles | resources.Concat "js/main.js" | resources.Minify | resources.Fingerprint }}
+  <script defer src="{{ $main_js.RelPermalink }}"></script>
+
+  {{ range .AlternativeOutputFormats }}
+  {{ printf `
+  <link rel="%s" type="%s" href="%s" title="%s" />` .Rel .MediaType.Type .RelPermalink site.Title | safeHTML }}
+  {{ end }}
+  {{ partial "head_favicons.html" . }}
+  {{ partial "google-analytics.html" . }}
+  {{ partial "seo/json-ld.html" . }}
+</head>
+
+<body class="preload-theme {{ if .IsPage }}page-post{{ end }}">
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+  <!-- Atmospheric Texture & Light Leaks -->
+  <div class="site-atmosphere" aria-hidden="true"></div>
+  <!-- Nav -->
+  {{ partial "main-nav.html" . }}
+  <!-- Page Header (Skip for explore page as it has its own overlay header) -->
+  {{ if ne .Type "explore" }}
+  {{ partial "intro-header.html" . }}
+  {{ end }}
+  <main id="main-content" tabindex="-1">
+    {{ block "main" . }}
+    <!-- Main Content -->
+    <div class="container">
+      <div class="row">
+        {{ if eq site.Params.sidebar.enable false }}
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1
+      postlist-container">
+          {{ block "container" . }}{{ end }}
+        </div>
+        <!-- Sidebar Container -->
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1
+      sidebar-container">
+          <!-- Featured Tags -->
+          {{ partial "featured-tags.html" . }}
+          <!-- Friends Blog -->
+          {{ partial "friends.html" . }}
+        </div>
+        {{ else }}
+        <!-- USE SIDEBAR -->
+        <!-- PostList Container -->
+        <div class="col-lg-8 col-lg-offset-1 col-md-8 col-md-offset-1 col-sm-12
+      col-xs-12 postlist-container">
+          {{ block "container" . }}{{ end }}
+        </div>
+        <!-- Sidebar Container -->
+        <div class="col-lg-3 col-lg-offset-0 col-md-3 col-md-offset-0 col-sm-12
+      col-xs-12 sidebar-container">
+          <!-- Advertisement -->
+          {{ partial "extras.html" . }}
+          {{ partial "short-about.html" . }}
+          {{ partial "featured-series.html" . }}
+          <!-- Featured Tags -->
+          {{ partial "featured-tags.html" . }}
+          {{ partial "featured-categories.html" . }}
+          <!-- Friends Blog -->
+          {{ partial "friends.html" . }}
+        </div>
+        {{ end }}
+      </div>
+    </div>
+    {{ end }}
+  </main>
+  <!-- Performance Telemetry HUD -->
+  <div id="perf-telemetry" class="perf-telemetry" aria-hidden="true">
+    <span class="perf-label">SYS.PERF</span>
+    <span class="perf-metric">LOAD: <span id="perf-load">--</span>ms</span>
+    <span class="perf-divider">|</span>
+    <span class="perf-metric">SIZE: <span id="perf-size">--</span>KB</span>
+    <span class="perf-divider">|</span>
+    <span class="perf-metric">REQ: <span id="perf-req">--</span></span>
+    <span class="perf-divider">|</span>
+    <span class="perf-metric">SCRL: <span id="perf-scroll">0</span>%</span>
+  </div>
+  {{ partial "footer.html" . }}
+  <!-- Scroll to Top Progress Button -->
+  <button id="scroll-to-top" class="scroll-to-top" aria-label="Scroll to top">
+    <div class="scroll-fill" id="scroll-fill"></div>
+    {{ partial "icon" "chevron-up" }}
+  </button>
+  <script>
+    if (window.netlifyIdentity) {
+      window.netlifyIdentity.on("init", user => {
+        if (!user) {
+          window.netlifyIdentity.on("login", () => {
+            document.location.href = "/admin/";
+          });
+        }
+      });
+    }
+  </script>
+  <script>
+    // Remove preload class to enable transitions after initial render
+    document.addEventListener('DOMContentLoaded', function () {
+      // Small delay ensures CSS is fully parsed before transitions enable
+      setTimeout(function () {
+        document.body.classList.remove('preload-theme');
+      }, 50);
+    });
+  </script>
+</body>
+
+</html>

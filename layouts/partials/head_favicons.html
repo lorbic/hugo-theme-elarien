@@ -1,0 +1,17 @@
+<!-- Favicons (with hash cache-busting) -->
+{{ if site.Params.useFaviconGenerator }}
+  {{/* We use fileExists to safely hash files living in the static/ folder */}}
+  {{ $appleHash := "" }}{{ if fileExists "static/apple-touch-icon.png" }}{{ $appleHash = substr (md5 (os.ReadFile "static/apple-touch-icon.png")) 0 8 }}{{ end }}
+  {{ $fav32Hash := "" }}{{ if fileExists "static/favicon-32x32.png" }}{{ $fav32Hash = substr (md5 (os.ReadFile "static/favicon-32x32.png")) 0 8 }}{{ end }}
+  {{ $fav16Hash := "" }}{{ if fileExists "static/favicon-16x16.png" }}{{ $fav16Hash = substr (md5 (os.ReadFile "static/favicon-16x16.png")) 0 8 }}{{ end }}
+
+  <link rel="apple-touch-icon" sizes="180x180" href='{{ "apple-touch-icon.png" | relURL }}{{ with $appleHash }}?v={{ . }}{{ end }}'>
+  <link rel="icon" type="image/png" sizes="32x32" href='{{ "favicon-32x32.png" | relURL }}{{ with $fav32Hash }}?v={{ . }}{{ end }}'>
+  <link rel="icon" type="image/png" sizes="16x16" href='{{ "favicon-16x16.png" | relURL }}{{ with $fav16Hash }}?v={{ . }}{{ end }}'>
+  <link rel="manifest" href='{{ "site.webmanifest" | relURL }}'>
+{{ else }}
+  <link rel="apple-touch-icon" href='{{ "apple-touch-icon.png" | relURL }}'>
+  <link rel="shortcut icon" href='{{ "favicon.png" | relURL }}' type="image/x-icon">
+  <link rel="shortcut icon" href='{{ "favicon.ico" | relURL }}' type="image/x-icon">
+  <link rel="icon" href='{{ "logo.svg" | relURL }}' sizes="any" type="image/svg+xml" />
+{{ end }}

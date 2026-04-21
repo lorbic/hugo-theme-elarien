@@ -1,0 +1,69 @@
+<!-- Footer -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="footer-content">
+          <!-- Newsletter -->
+          {{ partial "newsletter.html" . }}
+          
+          <!-- Footer Navigation Menu -->
+          {{ if .Site.Menus.footer }}
+          <nav class="footer-nav" aria-label="Footer Navigation">
+            {{ range .Site.Menus.footer.ByWeight }}
+            <a href="{{ .URL }}" class="footer-nav-link" {{ if or (eq $.RelPermalink .URL) (eq $.Permalink .URL) }}aria-current="page"{{ end }}>{{ .Name }}</a>
+            {{ end }}
+          </nav>
+          {{ end }}
+
+          <!-- Social Links -->
+          <div class="footer-social">
+            {{ partial "sns-links.html" (dict "center" true "social" .Site.Params.social ) }}
+          </div>
+
+          <div class="footer-info">
+            <p class="copyright" style="text-transform: uppercase;">
+              {{- if site.Copyright }}
+              {{ site.Copyright | markdownify }}
+              {{- else }}
+              &copy; 2017-{{ now.Format "2006" }} {{ .Site.Params.author }}. All rights reserved.
+              {{- end }}
+              <br>
+              <small style="text-transform: none; opacity: 0.8;">Licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>.</small>
+            </p>
+            
+            <div class="footer-meta" style="margin-top: 1rem; opacity: 0.8;">
+              {{ partial "footer_privacy_terms_links.html"}}
+              <span class="meta-divider">·</span>
+              <span>Built with <a href="https://gohugo.io">Hugo</a></span>
+              <span class="meta-divider">·</span>
+              <span>v{{ substr (now.Unix | sha256) 0 7 }}</span>
+              <span class="meta-divider">·</span>
+              <a href="/llms.txt">llms.txt</a>
+              <span class="meta-divider">·</span>
+              <a href="/llms-full.txt">llms-full.txt</a>
+              {{ if .IsPage }}
+              <span class="meta-divider">·</span>
+              <a href="{{ .Permalink }}index.md">markdown</a>
+              {{ end }}
+            </div>
+
+            <p class="disclaimer" style="font-size: 0.75rem; opacity: 0.6; margin-top: 1.5rem; line-height: 1.6; max-width: 600px; margin-left: auto; margin-right: auto;">
+              The views and opinions expressed on this website are solely those of the author and do not represent the official policy, position, or endorsement of any past, current, or future employer.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Scripts -->
+
+{{ $searchJs := resources.Get "js/search.js" | resources.ExecuteAsTemplate "js/search.js" . | minify | fingerprint }}
+<script defer src="{{ $searchJs.RelPermalink }}"></script>
+
+{{ if .IsPage }}
+{{ $instant_js := resources.Get "js/instantpage.js" | resources.Minify | resources.Fingerprint }}
+<script src="{{ $instant_js.RelPermalink }}" type="module" defer></script>
+{{ end }}

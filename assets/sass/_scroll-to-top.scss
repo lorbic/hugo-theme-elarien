@@ -1,0 +1,67 @@
+/* Scroll to Top Progress Button (Water Jug Effect) */
+.scroll-to-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 44px;
+  height: 44px;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  border-radius: 4px; // Back to indie sharp corners
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 998;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+  transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  overflow: hidden; // Critical for the filling effect
+
+  .scroll-fill {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 0%; // Controlled by JS
+    background-color: var(--brand-primary);
+    opacity: 0.1; // Subtle fill
+    transition: height 0.15s linear;
+    z-index: 1;
+  }
+
+  i {
+    font-size: 16px;
+    z-index: 2;
+    transition: transform 0.2s ease, color 0.3s ease;
+  }
+
+  &:hover {
+    border-color: var(--brand-primary);
+    
+    .scroll-fill {
+      opacity: 0.2; // Darken on hover
+    }
+
+    i {
+      transform: translateY(-2px);
+      color: var(--brand-primary);
+    }
+  }
+
+  &.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  @media (max-width: 768px) {
+    bottom: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+  }
+}

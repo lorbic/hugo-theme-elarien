@@ -1,0 +1,22 @@
+{{- $ctx := . -}}
+{{- $class := "" -}}
+{{- $hash := false -}}
+
+{{- if reflect.IsMap . -}}
+{{- $ctx = .context -}}
+{{- $class = .class -}}
+{{- $hash = .hash -}}
+{{- end -}}
+
+{{- if $ctx.Params.tags -}}
+<div class="tags {{ with $class }}{{ . }}{{ end }}">
+    {{- range ($ctx.GetTerms "tags") -}}
+    {{- $title := .LinkTitle | lower -}}
+    {{- if and $title (ne $title " ") -}}
+    <a class="tag {{ if $hash }}hash-symbol{{ end }}" href="{{ .Page.RelPermalink }}" aria-label="View posts tagged with {{ .LinkTitle | lower }}" title="{{ .LinkTitle }}">
+        {{- $title -}}<span class="sr-only"> topic</span>
+    </a>
+    {{- end -}}
+    {{- end -}}
+</div>
+{{- end -}}

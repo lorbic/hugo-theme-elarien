@@ -1,0 +1,262 @@
+/* Code Wrappers for Render Hooks */
+.custom-code-block-wrapper {
+  position: relative;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  background-color: #1e1e1e;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  cursor: pointer; // Signal that the whole block can be clicked to expand
+  transition: border-color 0.2s ease;
+
+  &:hover:not(.is-expanded-state) {
+    border-color: var(--brand-primary);
+  }
+
+  &.is-expanded-state {
+    cursor: default; // Restore normal cursor once expanded
+  }
+
+  .code-language-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.7rem;
+    font-weight: 800;
+    font-family: $font-family-monospace;
+    color: rgba(255, 255, 255, 0.7);
+    background: rgba(255, 255, 255, 0.1);
+    border-bottom-left-radius: 4px;
+    z-index: 10;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .code-content-window {
+    max-height: 500px;
+    overflow-y: hidden;
+    transition: max-height 0.4s ease-in-out;
+    position: relative;
+
+    &.is-expanded {
+      max-height: 8000px; // Open gate
+    }
+  }
+
+  .highlight {
+    margin: 0 !important; // Prevent double margin
+    border-radius: 0;
+    border: none;
+  }
+
+  .code-show-more-btn {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    background: linear-gradient(to bottom, transparent, #1e1e1e 80%);
+    border: none;
+    display: none; // Only show via JS if taller than 500px
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    padding-bottom: 15px;
+    cursor: pointer;
+    z-index: 20;
+
+    span {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #90cdf4;
+      font-family: $font-family-monospace;
+      text-transform: uppercase;
+      background: #2d3748;
+      padding: 0.3rem 1rem;
+      border: 1px solid #4a5568;
+      border-radius: 20px;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+
+      i { margin-left: 0.5rem; transition: transform 0.3s; }
+
+      &:hover {
+        background: #63b3ed;
+        color: #1a202c;
+      }
+    }
+    
+    &.is-expanded {
+      height: 60px;
+      background: transparent;
+      position: static; // Drop to bottom
+      justify-content: center; // Center vertically when static
+      padding-bottom: 0; // Remove bottom padding used for gradient
+    }
+  }
+}
+
+/* Modernized Syntax Highlighting (Grid-Locked Aesthetic) */
+.highlight {
+    position: relative;
+    border: 1px solid var(--border-color);
+    background-color: #1e1e1e !important; // Technical snippets always dark
+    border-radius: 0; // Fixed structural look
+    
+    pre {
+        font-size: 15px;
+        line-height: 1.6;
+        margin: 0;
+        padding: $space-xl;
+        background: transparent !important;
+        font-family: $font-family-monospace !important;
+        color: #d4d4d4;
+        overflow-x: auto;
+
+        code {
+            background: transparent !important;
+            padding: 0;
+            border-radius: 0;
+            color: inherit;
+        }
+    }
+
+    .copy-code-button {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background-color: rgba(255, 255, 255, 0.05);
+        color: rgba(255, 255, 255, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 4px;
+        padding: 4px 8px;
+        font-size: 12px;
+        cursor: pointer;
+        opacity: 0;
+        transition: all 0.2s ease;
+        z-index: 10;
+
+        &:hover {
+            opacity: 1;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        &.success {
+            color: #2ea043;
+            border-color: #2ea043;
+        }
+    }
+
+    &:hover .copy-code-button {
+        opacity: 1;
+    }
+    .err { color: #9d0006 }
+    .k { color: #9d0006 }
+    .l { color: #9d0006 }
+    .n { color: #3c3836 }
+    .o { color: #9d0006 }
+    .p { color: #3c3836 }
+    .c { color: #928374; font-style: italic }
+    .g { color: #9d0006 }
+    .kn { color: #9d0006 }
+    .kp { color: #9d0006 }
+    .kr { color: #9d0006 }
+    .kt { color: #b57614 }
+    .m { color: #8f3f71 }
+    .s { color: #79740e }
+    .na { color: #b57614 }
+    .nb { color: #3c3836 }
+    .nc { color: #b57614 }
+    .no { color: #9d0006 }
+    .nd { color: #9d0006 }
+    .ni { color: #3c3836 }
+    .ne { color: #9d0006 }
+    .nf { color: #af3a03 }
+    .nl { color: #3c3836 }
+    .nn { color: #b57614 }
+    .nt { color: #af3a03 }
+    .nv { color: #9d0006 }
+    .ow { color: #9d0006 }
+    .w { color: #3c3836 }
+    .mf { color: #8f3f71 }
+    .mh { color: #8f3f71 }
+    .mi { color: #8f3f71 }
+    .mo { color: #8f3f71 }
+    .sb { color: #79740e }
+    .sc { color: #79740e }
+    .sd { color: #79740e }
+    .s2 { color: #79740e }
+    .se { color: #79740e }
+    .sh { color: #79740e }
+    .si { color: #79740e }
+    .sx { color: #79740e }
+    .sr { color: #79740e }
+    .s1 { color: #79740e }
+    .ss { color: #79740e }
+    .bp { color: #3c3836 }
+    .vc { color: #9d0006 }
+    .vg { color: #9d0006 }
+    .vi { color: #9d0006 }
+    .il { color: #8f3f71 }
+}
+
+/* Dark theme overrides - ensuring consistency */
+[data-theme='dark'] .highlight {
+    border-color: var(--border-color);
+    background-color: #1e1e1e !important;
+
+    .copy-code-button {
+        // Inherits basergba styles
+    }
+    .err { color: #fb4934 }
+    .k { color: #fb4934 }
+    .l { color: #ebdbb2 }
+    .n { color: #ebdbb2 }
+    .o { color: #fe8019 }
+    .p { color: #ebdbb2 }
+    .c { color: #928374; font-style: italic }
+    .g { color: #fb4934 }
+    .kn { color: #fe8019 }
+    .kp { color: #fb4934 }
+    .kr { color: #fb4934 }
+    .kt { color: #fabd2f }
+    .m { color: #d3869b }
+    .s { color: #b8bb26 }
+    .na { color: #b8bb26 }
+    .nb { color: #fabd2f }
+    .nc { color: #fabd2f }
+    .no { color: #d3869b }
+    .nd { color: #fe8019 }
+    .ni { color: #ebdbb2 }
+    .ne { color: #fb4934 }
+    .nf { color: #fabd2f }
+    .nl { color: #ebdbb2 }
+    .nn { color: #fabd2f }
+    .nt { color: #fb4934 }
+    .nv { color: #ebdbb2 }
+    .ow { color: #fe8019 }
+    .w { color: #ebdbb2 }
+    .mf { color: #d3869b }
+    .mh { color: #d3869b }
+    .mi { color: #d3869b }
+    .mo { color: #d3869b }
+    .sb { color: #b8bb26 }
+    .sc { color: #ebdbb2 }
+    .sd { color: #928374 }
+    .s2 { color: #b8bb26 }
+    .se { color: #d3869b }
+    .sh { color: #b8bb26 }
+    .si { color: #b8bb26 }
+    .sx { color: #b8bb26 }
+    .sr { color: #b8bb26 }
+    .s1 { color: #b8bb26 }
+    .ss { color: #83a598 }
+    .bp { color: #ebdbb2 }
+    .vc { color: #ebdbb2 }
+    .vg { color: #ebdbb2 }
+    .vi { color: #ebdbb2 }
+    .il { color: #d3869b }
+}

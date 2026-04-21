@@ -1,0 +1,232 @@
+{{ define "main" }}
+
+<div class="explore-container">
+  <div class="explore-header">
+    <h1 class="page-title-modern">Knowledge Graph</h1>
+    <p class="page-subtitle-modern">Explore the connections between ideas, posts, and technologies.</p>
+  </div>
+  
+  <div id="graph-wrapper"></div>
+  
+  <div id="node-info-panel" class="node-info-panel">
+    <h3 id="node-title"></h3>
+    <a id="node-link" href="#" class="btn btn-primary" style="display: none;">Read Entry →</a>
+  </div>
+
+  <div class="explore-nav-bar">
+    <a href="/archive/" class="explore-nav-link">Archive</a>
+    <a href="/series/" class="explore-nav-link">Series</a>
+    <a href="/categories/" class="explore-nav-link">Categories</a>
+    <a href="/tags/" class="explore-nav-link">Tags</a>
+  </div>
+</div>
+
+<style>
+.explore-container {
+  position: relative;
+  width: 100vw;
+  height: calc(100vh - 70px); // Subtract navbar height
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  background: var(--background-color);
+  overflow: hidden;
+}
+
+.explore-header {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  z-index: 10;
+  pointer-events: none;
+  max-width: 400px;
+}
+
+#graph-wrapper {
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+}
+#graph-wrapper:active { cursor: grabbing; }
+
+.node-info-panel {
+  position: absolute;
+  bottom: 2rem;
+  right: 2rem;
+  background: var(--body-background-color);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1.5rem;
+  max-width: 350px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  transform: translateY(150%);
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  z-index: 10;
+}
+
+.node-info-panel.visible {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+#node-title {
+  font-family: var(--font-family-monospace);
+  font-size: 1.2rem;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: var(--text-color);
+}
+
+.explore-nav-bar {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--body-background-color, #fff);
+  border: 1px solid var(--border-color, #dee2e6);
+  border-radius: 30px;
+  padding: 0.5rem 1rem;
+  display: flex;
+  gap: 1rem;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  z-index: 10;
+}
+
+.explore-nav-link {
+  color: var(--text-color, #212529);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.9rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.explore-nav-link:hover {
+  background: var(--brand-primary, #3455db);
+  color: #fff;
+  text-decoration: none;
+}
+
+@media (max-width: 768px) {
+  .explore-nav-bar {
+    bottom: 1rem;
+    padding: 0.5rem;
+    gap: 0.5rem;
+  }
+  .explore-nav-link {
+    font-size: 0.8rem;
+    padding: 0.2rem 0.5rem;
+  }
+}
+</style>
+
+<!-- Load Force Graph Libraries -->
+<script src="https://unpkg.com/force-graph"></script>
+
+<script>
+// We use a small polling mechanism or wait for load to ensure ForceGraph is available
+// since the external script is deferred.
+const initGraph = () => {
+  if (typeof ForceGraph === 'undefined') {
+    setTimeout(initGraph, 50);
+    return;
+  }
+
+  const panel = document.getElementById('node-info-panel');
+  const titleEl = document.getElementById('node-title');
+  const linkEl = document.getElementById('node-link');
+  
+  // Get CSS variables for theming
+  const getStyle = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  
+  const textColor = getStyle('--text-color') || '#212529';
+  const brandColor = getStyle('--brand-primary') || '#3455db';
+  const linkHoverColor = getStyle('--link-hover-color') || '#2a43af';
+
+  fetch('/graph.json')
+    .then(res => {
+      if (!res.ok) throw new Error("Failed to load graph data");
+      return res.json();
+    })
+    .then(data => {
+      if (!data || !data.nodes || data.nodes.length === 0) {
+        console.error("Graph data is empty");
+        document.getElementById('graph-wrapper').innerHTML = "<p style='text-align:center; padding: 2rem;'>No graph data available. Make sure Hugo generated graph.json.</p>";
+        return;
+      }
+      
+      const Graph = ForceGraph()(document.getElementById('graph-wrapper'))
+        .graphData(data)
+        .nodeId('id')
+        .nodeLabel('name')
+        .nodeVal('val')
+        .nodeAutoColorBy('group')
+        .linkColor(() => getStyle('--border-color') || '#dee2e6')
+        .linkWidth(1.5)
+        .nodeRelSize(4)
+        .onNodeClick(node => {
+          // Center camera on node
+          Graph.centerAt(node.x, node.y, 1000);
+          Graph.zoom(8, 2000);
+          
+          // Show info panel
+          titleEl.textContent = node.name;
+          if (node.url) {
+            linkEl.href = node.url;
+            linkEl.style.display = 'inline-block';
+          } else {
+            linkEl.style.display = 'none';
+          }
+          panel.classList.add('visible');
+        })
+        .onBackgroundClick(() => {
+          panel.classList.remove('visible');
+          Graph.zoomToFit(400);
+        })
+        .nodeCanvasObject((node, ctx, globalScale) => {
+          const label = node.name;
+          const fontSize = 12/globalScale;
+          ctx.font = `${fontSize}px monospace`;
+          const textWidth = ctx.measureText(label).width;
+          const bckgDimensions = [textWidth, fontSize].map(n => n + fontSize * 0.2);
+
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+          if (document.documentElement.getAttribute('data-theme') === 'dark') {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+          }
+          
+          ctx.fillRect(node.x - bckgDimensions[0] / 2, node.y - bckgDimensions[1] / 2, ...bckgDimensions);
+
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillStyle = node.color;
+          
+          // Highlight post nodes
+          if (node.group === 4) {
+            ctx.font = `bold ${fontSize}px monospace`;
+            ctx.fillStyle = textColor;
+          }
+          
+          ctx.fillText(label, node.x, node.y);
+          node.__bckgDimensions = bckgDimensions; // to re-use in nodePointerAreaPaint
+        })
+        .nodePointerAreaPaint((node, color, ctx) => {
+          ctx.fillStyle = color;
+          const bckgDimensions = node.__bckgDimensions;
+          bckgDimensions && ctx.fillRect(node.x - bckgDimensions[0] / 2, node.y - bckgDimensions[1] / 2, ...bckgDimensions);
+        });
+        
+        // Initial zoom fit
+        setTimeout(() => Graph.zoomToFit(400), 500);
+    })
+    .catch(err => {
+      console.error("Error initializing graph:", err);
+      document.getElementById('graph-wrapper').innerHTML = `<p style='text-align:center; padding: 2rem; color: red;'>Error loading graph: ${err.message}</p>`;
+    });
+};
+
+document.addEventListener('DOMContentLoaded', initGraph);
+</script>
+
+{{ end }}

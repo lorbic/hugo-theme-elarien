@@ -1,0 +1,17 @@
+{{/* 
+Usage:
+
+1. Basic:
+{{< link href="https://example.com" text="Example" >}}
+
+2. With optional title and target:
+{{< link href="https://example.com" text="Example" title="Visit Example" target="_blank" >}}
+
+*/}}
+
+<a href="{{ .Get "href" }}"
+   {{ with .Get "title" }}title="{{ . }}"{{ end }}
+   {{ with .Get "target" }}target="{{ . }}"{{ end }}
+   class="{{ with .Get "class" }}{{ . }}{{ else }}link{{ end }}">
+   {{ .Get "text" }}
+</a>

@@ -1,0 +1,12 @@
+<section class="series-container" style="margin-top:2.5em;">
+  {{ $bottom := .Scratch.Get "bottom" }}
+  {{ if $bottom }}
+  <hr class="hidden-sm hidden-xs">
+  {{ end }}
+  <h2 class="sidebar-heading"><a href="/series/">SERIES</a></h2>
+  <div class="tags series">
+    {{ range site.Taxonomies.series }}
+    <a class="tag" href="{{ .Page.RelPermalink }}" aria-label="View posts in series {{ .Page.Title | title }}" title="Series: {{ .Page.Title | title }}">{{ .Page.Title | title }}</a>
+    {{ end }}
+  </div>
+</section>

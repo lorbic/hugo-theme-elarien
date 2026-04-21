@@ -1,0 +1,8 @@
+{{- $path := . -}}
+{{- $res := resources.Get $path -}}
+{{- if not $res -}}
+  {{- if fileExists (printf "static/%s" $path) -}}
+    {{- $res = resources.FromString $path (readFile (printf "static/%s" $path)) -}}
+  {{- end -}}
+{{- end -}}
+{{- return $res -}}

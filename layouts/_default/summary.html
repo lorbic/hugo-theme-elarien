@@ -1,0 +1,31 @@
+{{ $postTitle := .Title }}
+<div class="post-row-container reveal-item">
+  <a href="{{ .RelPermalink }}" class="post-row-link">
+    <div class="post-row-layout">
+      <div class="post-row-meta">
+        <time datetime="{{ .Date.Format "2006-01-02" }}" class="meta-date-bold">{{ .Date.Format "02" }}</time>
+        <span class="meta-month-year">{{ .Date.Format "Jan '06" }}</span>
+        <span class="meta-data-tiny">{{ .ReadingTime }} MIN</span>
+      </div>
+
+      {{ with .Params.image }}
+      <div class="post-row-image-container">
+        <img src="{{ . | absURL }}" alt="{{ $postTitle }}" loading="lazy">
+      </div>
+      {{ end }}
+
+      <div class="post-row-content">
+        <div class="post-row-header">
+          <h2 class="post-row-title">{{ .Title }}</h2>
+        </div>
+        <div class="post-row-excerpt">
+          <p>{{ .Description | default (.Summary | plainify) }}</p>
+        </div>
+      </div>
+      
+      <div class="post-row-arrow">
+        {{ partial "icon" "arrow-right" }}
+      </div>
+    </div>
+  </a>
+</div>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* Based on Lorbic Dark Theme */
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #1a202c;
+            /* --background-color */
+            color: #e2e8f0;
+            /* --text-color */
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #2d3748;
+            /* --card-background-color */
+            border: 1px solid #4a5568;
+            /* --border-color */
+            padding: 30px;
+            border-radius: 6px;
+        }
+
+        .brand {
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        .brand a {
+            color: #63b3ed;
+            /* --brand-primary */
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .post-title {
+            color: #b3defa;
+            /* --brand-primary-light */
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .meta {
+            color: #a0aec0;
+            /* --text-color-light */
+            font-size: 12px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #4a5568;
+            padding-bottom: 10px;
+        }
+
+        .post-body {
+            line-height: 1.6;
+            font-size: 15px;
+            color: #d4d4d4;
+            /* --text-color-lighter */
+        }
+
+        .post-body code {
+            background-color: #3f4040;
+            /* --code-bg-color */
+            color: #e2e8f0;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+
+        .post-body a {
+            color: #63b3ed;
+            /* --link-color */
+            text-decoration: none;
+        }
+
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #4a5568;
+            font-size: 11px;
+            color: #a0aec0;
+            /* --footer-text-color */
+            text-align: center;
+        }
+
+        .footer a {
+            color: #a0aec0;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="brand">
+            <a href="https://lorbic.com">> LORBIC.COM</a>
+        </div>
+
+        <div class="post-title">
+            {{ .Campaign.Subject }}
+        </div>
+
+        <div class="meta">
+            DATE: {{ Date "2006-01-02" }} | STACK: BACKEND_ESSAYS
+        </div>
+
+        <div class="post-body">
+            {{ template "content" . }}
+        </div>
+
+        <div class="footer">
+            Sent to a human interested in systems thinking, databases, and infrastructure.<br>
+            Visit the archive: <a href="https://lorbic.com">lorbic.com</a><br>
+            Changed your mind? (<a href="{{ UnsubscribeURL }}" style="color: #63b3ed;">unsubscribe</a>)<br>
+            <br>
+        </div>
+    </div>
+</body>
+
+</html>

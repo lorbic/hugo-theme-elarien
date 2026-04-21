@@ -1,0 +1,24 @@
+{{ if and .TableOfContents (ne .Params.toc false) }}
+<div id="toc-fab-container" class="toc-fab-container" aria-label="Table of Contents">
+  <!-- The Floating Button -->
+  <button id="toc-fab-trigger" class="toc-fab-trigger" title="Table of Contents" aria-expanded="false" aria-controls="toc-fab-panel">
+    <span class="toc-fab-text">[ TOC ]</span>
+  </button>
+
+  <!-- The Panel -->
+  <div id="toc-fab-panel" class="toc-fab-panel" aria-hidden="true">
+    <div class="toc-panel-header">
+      <span class="sidebar-label">Table of Contents</span>
+      <button id="toc-fab-close" class="toc-panel-close" aria-label="Close Table of Contents">
+        {{ partial "icon" "times" }}
+      </button>
+    </div>
+    <div class="toc-panel-content">
+      {{ .TableOfContents }}
+    </div>
+  </div>
+  
+  <!-- Backdrop -->
+  <div id="toc-fab-backdrop" class="toc-fab-backdrop" aria-hidden="true"></div>
+</div>
+{{ end }}

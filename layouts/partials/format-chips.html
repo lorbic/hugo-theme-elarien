@@ -1,0 +1,10 @@
+{{- if eq .Type "posts" -}}
+{{- if .Params.pinned -}}
+<span class="featured-chip">Featured</span>
+{{- end -}}
+{{- if ge .ReadingTime 10 -}}
+<span class="format-chip long-form">Long Form</span>
+{{- else if le .ReadingTime 3 -}}
+<span class="format-chip short-read">Short Read</span>
+{{- end -}}
+{{- end -}}

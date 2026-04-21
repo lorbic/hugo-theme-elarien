@@ -1,0 +1,58 @@
+/*--------------------------------------------------------------
+# Overrides Legacy
+--------------------------------------------------------------*/
+div.highlight>table>pre {
+  border: none !important;
+}
+
+/* Styling for the popup */
+.terms-text-button {
+  right: 0;
+  bottom: 0;
+  text-align: right;
+  background-color: none;
+
+  button {
+    text-decoration: underline;
+    outline: none;
+    border: none;
+    font-size: 10px;
+  }
+}
+
+.popup {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  max-height: 90vh;
+  overflow-y: scroll;
+  font-size: 1.5rem;
+
+  button {
+    position: fixed;
+    height: 3rem;
+    width: 3rem;
+    top: 1rem;
+    right: 1rem;
+    border-radius: 500%;
+  }
+}
+
+/* Styling for the overlay background */
+.overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 900;
+}

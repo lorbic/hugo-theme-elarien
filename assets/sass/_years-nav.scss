@@ -1,0 +1,71 @@
+/* Years Navigation */
+.years-nav-container {
+    margin-bottom: 30px;
+    width: 100%;
+}
+
+.years-nav {
+    display: flex;
+    overflow-x: auto;
+    gap: 10px;
+    padding: 10px 2px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    /* IE 10+ */
+
+    &::-webkit-scrollbar {
+        display: none;
+        /* Chrome/Safari */
+    }
+}
+
+.year-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 50px;
+    border: 1px solid var(--border-color);
+    background: var(--card-background-color);
+    color: var(--text-color);
+    text-decoration: none !important;
+    white-space: nowrap;
+    transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+    font-size: 14px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+
+    &:hover {
+        background: var(--body-background-color); // Use body bg as slightly different from card
+        border-color: var(--brand-primary); // Highlight with primary color
+        color: var(--link-hover-color);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08);
+
+        .year-count {
+            background: var(--card-background-color);
+            color: var(--text-color);
+        }
+    }
+}
+
+.year-count {
+    background: var(--body-background-color);
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-color-light);
+    min-width: 20px;
+    text-align: center;
+}
+
+[data-theme='dark'] {
+    .year-pill {
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+
+        &:hover {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+        }
+    }
+}
