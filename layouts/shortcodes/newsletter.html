@@ -5,7 +5,7 @@
         <p class="newsletter-subline">{{ site.Params.newsletter.subline | default "Let's figure out why. Get in-depth technical deep dives and architectural insights delivered straight to your inbox." }}</p>
     </div>
 
-    <form method="post" action="{{ site.Params.newsletter.server | default "https://mailer.heartfire.lorbic.com" }}/subscription/form" class="newsletter-form listmonk-form">
+    <form method="post" action="{{ with site.Params.newsletter.server }}{{ . }}/subscription/form{{ else }}#{{ end }}" class="newsletter-form listmonk-form">
         <input type="hidden" name="nonce" />
         <input type="hidden" name="l" value="{{ site.Params.newsletter.list_id | default "d3a1342b-0205-4153-9cfe-52ef3b1ef880" }}" />
 
@@ -20,7 +20,7 @@
         </div>
 
         <div class="newsletter-captcha">
-            <altcha-widget challengeurl="{{ site.Params.newsletter.server | default "https://mailer.heartfire.lorbic.com" }}/api/public/captcha/altcha"></altcha-widget>
+            <altcha-widget challengeurl="{{ with site.Params.newsletter.server }}{{ . }}/api/public/captcha/altcha{{ else }}#{{ end }}"></altcha-widget>
         </div>
 
         <div class="newsletter-footer">
