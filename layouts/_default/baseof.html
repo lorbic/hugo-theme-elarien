@@ -123,6 +123,11 @@
   {{ partial "head_favicons.html" . }}
   {{ partial "google-analytics.html" . }}
   {{ partial "seo/json-ld.html" . }}
+
+  <!-- 3. Network & Connection Optimization -->
+  <link rel="preconnect" href="https://www.googletagmanager.com">
+  <link rel="preconnect" href="https://www.google-analytics.com">
+  {{ with site.Params.newsletter.server }}<link rel="preconnect" href="{{ . }}">{{ end }}
 </head>
 
 <body class="preload-theme {{ if .IsPage }}page-post{{ end }}">

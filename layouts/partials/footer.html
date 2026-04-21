@@ -6,12 +6,13 @@
         <div class="footer-content">
           <!-- Newsletter -->
           {{ partial "newsletter.html" . }}
-          
+
           <!-- Footer Navigation Menu -->
           {{ if .Site.Menus.footer }}
           <nav class="footer-nav" aria-label="Footer Navigation">
             {{ range .Site.Menus.footer.ByWeight }}
-            <a href="{{ .URL }}" class="footer-nav-link" {{ if or (eq $.RelPermalink .URL) (eq $.Permalink .URL) }}aria-current="page"{{ end }}>{{ .Name }}</a>
+            <a href="{{ .URL }}" class="footer-nav-link" {{ if or (eq $.RelPermalink .URL) (eq $.Permalink .URL)
+              }}aria-current="page" {{ end }}>{{ .Name }}</a>
             {{ end }}
           </nav>
           {{ end }}
@@ -29,13 +30,18 @@
               &copy; 2017-{{ now.Format "2006" }} {{ .Site.Params.author }}. All rights reserved.
               {{- end }}
               <br>
-              <small style="text-transform: none; opacity: 0.8;">Licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>.</small>
+              <small style="text-transform: none; opacity: 0.8;">Licensed under <a
+                  href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC
+                  BY-SA 4.0</a>.</small>
             </p>
-            
+
             <div class="footer-meta" style="margin-top: 1rem; opacity: 0.8;">
               {{ partial "footer_privacy_terms_links.html"}}
               <span class="meta-divider">·</span>
               <span>Built with <a href="https://gohugo.io">Hugo</a></span>
+              <span class="meta-divider">·</span>
+              <span><a href="https://github.com/lorbic/hugo-theme-elarien" target="_blank" rel="noopener">Theme</a> by
+                <a href="https://vikashpatel.net" target="_blank" rel="noopener">Vikash Patel</a></span>
               <span class="meta-divider">·</span>
               <span>v{{ substr (now.Unix | sha256) 0 7 }}</span>
               <span class="meta-divider">·</span>
@@ -48,8 +54,10 @@
               {{ end }}
             </div>
 
-            <p class="disclaimer" style="font-size: 0.75rem; opacity: 0.6; margin-top: 1.5rem; line-height: 1.6; max-width: 600px; margin-left: auto; margin-right: auto;">
-              The views and opinions expressed on this website are solely those of the author and do not represent the official policy, position, or endorsement of any past, current, or future employer.
+            <p class="disclaimer"
+              style="font-size: 0.75rem; opacity: 0.6; margin-top: 1.5rem; line-height: 1.6; max-width: 600px; margin-left: auto; margin-right: auto;">
+              The views and opinions expressed on this website are solely those of the author and do not represent the
+              official policy, position, or endorsement of any past, current, or future employer.
             </p>
           </div>
         </div>
